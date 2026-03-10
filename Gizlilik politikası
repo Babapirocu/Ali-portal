@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Sitesi Poliçesi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web Sitesi Poliçesi</h1>
+
+    <section>
+        <h2>1. Genel Bilgiler</h2>
+        <p>Bu web sitesi (“Site”), [Şirket/Adınız] tarafından işletilmektedir. Siteye erişim sağladığınızda, bu poliçedeki şartları kabul etmiş sayılırsınız.</p>
+    </section>
+
+    <section>
+        <h2>2. Kullanım Koşulları</h2>
+        <ul>
+            <li>Siteye erişim ücretsizdir.</li>
+            <li>Site içeriğini yalnızca kişisel, ticari olmayan amaçlarla kullanabilirsiniz.</li>
+            <li>Siteyi kullanırken yasadışı, yanıltıcı veya zararlı faaliyetlerde bulunmak yasaktır.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>3. Gizlilik Politikası</h2>
+        <ul>
+            <li>Kullanıcı bilgileriniz (isim, e-posta, IP adresi vb.) gizli tutulur.</li>
+            <li>Toplanan bilgiler yalnızca Site hizmetlerini iyileştirmek için kullanılır.</li>
+            <li>Bilgiler, yasal zorunluluk olmadıkça üçüncü kişilerle paylaşılmaz.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>4. Çerezler (Cookies)</h2>
+        <p>Site, deneyiminizi geliştirmek için çerezler kullanabilir. Çerezler, tarayıcı ayarlarından yönetilebilir veya engellenebilir.</p>
+    </section>
+
+    <section>
+        <h2>5. Sorumluluk Sınırlaması</h2>
+        <p>Site içeriği sürekli güncellenmeye çalışılmakla birlikte, doğruluk garantisi verilmez. Siteyi kullanmanızdan doğabilecek zararlardan [Şirket/Adınız] sorumlu tutulamaz.</p>
+    </section>
+
+    <section>
+        <h2>6. Değişiklikler</h2>
+        <p>[ali firmaları], bu poliçeyi herhangi bir zamanda değiştirme hakkını saklı tutar. Değişiklikler yayınlandığı anda yürürlüğe girer.</p>
+    </section>
+
+    <section>
+        <h2>7. İletişim</h2>
+        <p>Herhangi bir soru veya şikayet için: <br>
+        E-posta: <a href="mailto:sadi.yuksel@std.cevrekoleji.k12.tr">sadi.yuksel@std.cevrekoleji.k12.tr</a><br>
+        Telefon: [507 786 70 53]</p>
+    </section>
+
+</body>
+</html>
