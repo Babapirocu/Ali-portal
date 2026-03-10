@@ -1,3 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ali Portal</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f2f2f2;
+text-align:center;
+margin:0;
+}
+
+.container{
+margin-top:100px;
+}
+
+input{
+padding:10px;
+margin:10px;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+background:#0077ff;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+#portal{
+display:none;
+margin-top:50px;
+}
+
+#ai{
+display:none;
+margin-top:20px;
+}
+
+#cevap{
+margin-top:20px;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="login" class="container">
+
+<h2>Giriş Yap</h2>
+
+<input id="email" placeholder="E-posta"><br> <input id="sifre" type="password" placeholder="Şifre"><br>
+
+<button onclick="giris()">Giriş Yap</button>
+
+<p id="hata"></p>
+
+</div>
+
+<div id="portal">
+
+<h2>Ali Portal</h2>
+
+<button onclick="aiAc()">Yapay Zeka</button>
+
+</div>
+
+<div id="ai">
+
+<h3>Yapay Zeka</h3>
+
+<input id="soru" placeholder="Bir şey yaz...">
+
+<button onclick="cevapla()">Gönder</button>
+
+<p id="cevap"></p>
+
+</div>
+
 <script>
 
 function giris(){
@@ -40,15 +127,4 @@ cevap="Ben Ali Portal yapay zekasıyım 🤖";
 }
 
 else if(soru.includes("test")){
-cevap="İstersen sana matematik veya türkçe testi hazırlayabilirim.";
-}
-
-else{
-cevap="Bunu henüz öğrenmedim ama yakında öğreneceğim 🙂";
-}
-
-document.getElementById("cevap").innerText=cevap;
-
-}
-
-</script>
+cevap="İstersen sana m
