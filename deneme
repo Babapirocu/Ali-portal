@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ali Yapay Zeka Portalı</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+margin:0;
+text-align:center;
+}
+
+.login{
+margin-top:120px;
+}
+
+input{
+padding:10px;
+margin:10px;
+font-size:16px;
+width:200px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+background:#0077ff;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+#portal{
+display:none;
+}
+
+#chat{
+display:none;
+margin-top:40px;
+}
+
+#mesajlar{
+width:80%;
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+min-height:200px;
+text-align:left;
+}
+
+.user{
+color:blue;
+margin-top:10px;
+}
+
+.ai{
+color:green;
+margin-top:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="login" class="login">
+
+<h2>Ali Portal Giriş</h2>
+
+<input id="email" placeholder="E-posta"><br> <input id="sifre" type="password" placeholder="Şifre"><br>
+
+<button onclick="giris()">Giriş Yap</button>
+
+<p id="hata"></p>
+
+</div>
+
+<div id="portal">
+
+<h2>Ali Portal</h2>
+
+<button onclick="aiAc()">Yapay Zeka</button>
+
+</div>
+
+<div id="chat">
+
+<div id="mesajlar"></div>
+
+<input id="soru" placeholder="Bir şey yaz...">
+<button onclick="cevapla()">Gönder</button>
+
+</div>
+
+<script>
+
+function giris(){
+
+let email=document.getElementById("email").value;
+let sifre=document.getElementById("sifre").value;
+
+if(email==="İphone444" && sifre==="İphone555"){
+
+document.getElementById("login").style.display="none";
+document.getElementById("portal").style.display="block";
+
+}else{
+
+document.getElementById("hata").innerText="Bilgiler yanlış";
+
+}
+
+}
+
+function aiAc(){
+
+document.getElementById("chat").style.display="block";
+
+}
+
+function cevapla(){
+
+let soru=document.getElementById("soru").value;
+let s=soru.toLowerCase();
+
+let cevap="";
+
+if(s.includes("merhaba")){
+
+cevap="Merhaba 👋 Sana nasıl yardımcı olabilirim?";
+
+}
+
+else if(s.includes("nasılsın")){
+
+cevap="Ben iyiyim 😊 Sen nasılsın?";
+
+}
+
+else if(s.includes("adın ne")){
+
+cevap="Ben Ali Portal yapay zekasıyım 🤖";
+
+}
+
+else if(s.includes("matematik")){
+
+cevap="Matematik çok eğlenceli bir derstir.";
+
+}
+
+else if(s.includes("türkiye")){
+
+cevap="Türkiye'nin başkenti Ankara'dır.";
+
+}
+
+else{
+
+cevap="Bu soruya cevap vermeyi henüz öğreniyorum 🙂";
+
+}
+
+let mesajlar=document.getElementById("mesajlar");
+
+mesajlar.innerHTML += "<div class='user'><b>Sen:</b> "+soru+"</div>";
+mesajlar.innerHTML += "<div class='ai'><b>AI:</b> "+cevap+"</div>";
+
+document.getElementById("soru").value="";
+
+}
+
+</script>
+
+</body>
+</html>
+
