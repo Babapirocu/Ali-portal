@@ -124,4 +124,57 @@ document.getElementById("cevap").innerText=cevap;
 </script>
 
 </body>
-</html>
+</html><script>
+
+function giris(){
+
+let email=document.getElementById("email").value;
+let sifre=document.getElementById("sifre").value;
+
+if(email==="İphone444" && sifre==="İphone555"){
+
+document.getElementById("login").style.display="none";
+document.getElementById("portal").style.display="block";
+
+}else{
+
+document.getElementById("hata").innerText="Giriş bilgileri yanlış";
+
+}
+
+}
+
+function aiAc(){
+document.getElementById("ai").style.display="block";
+}
+
+function cevapla(){
+
+let soru=document.getElementById("soru").value.toLowerCase();
+let cevap="";
+
+if(soru.includes("merhaba")){
+cevap="Merhaba 👋 Sana nasıl yardımcı olabilirim?";
+}
+
+else if(soru.includes("nasılsın")){
+cevap="Ben iyiyim 😊 Sen nasılsın?";
+}
+
+else if(soru.includes("adın ne")){
+cevap="Ben Ali Portal yapay zekasıyım 🤖";
+}
+
+else if(soru.includes("test")){
+cevap="İstersen sana matematik veya türkçe testi hazırlayabilirim.";
+}
+
+else{
+cevap="Bunu henüz öğrenmedim ama yakında öğreneceğim 🙂";
+}
+
+document.getElementById("cevap").innerText=cevap;
+
+}
+
+</script>
