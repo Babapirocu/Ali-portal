@@ -141,29 +141,4 @@ document.getElementById("cevap").innerText=cevap;
 </script>
 
 </body>
-</html><script>
-
-async function cevapla(){
-
-let soru = document.getElementById("soru").value;
-
-let cevap = await fetch("https://api.openai.com/v1/chat/completions",{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer API_KEY"
-},
-body:JSON.stringify({
-model:"gpt-4o-mini",
-messages:[{role:"user",content:soru}]
-})
-})
-
-let data = await cevap.json();
-
-document.getElementById("cevap").innerText =
-data.choices[0].message.content;
-
-}
-
-</script>
+</html>
