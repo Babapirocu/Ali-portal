@@ -120,7 +120,92 @@ let cevap="Bunu düşündüm ama cevap henüz eklenmedi 🙂";
 document.getElementById("cevap").innerText=cevap;
 
 }
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Şifre Üretici</title>
 
+<style>
+body{
+font-family: Arial;
+background:#f2f2f2;
+text-align:center;
+padding:40px;
+}
+
+.menu{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+display:inline-block;
+}
+
+button{
+padding:12px 20px;
+font-size:16px;
+cursor:pointer;
+border:none;
+background:#007bff;
+color:white;
+border-radius:5px;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+#sifre{
+margin-top:20px;
+font-size:40px;
+font-weight:bold;
+color:#333;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="menu">
+
+<h2>Şifre Sistemi</h2>
+
+<button onclick="sifreUret()">Kırılamaz 4 Haneli Şifre Al</button>
+
+<div id="sifre">----</div>
+
+</div>
+
+<script>
+
+let kullanilanSifreler = new Set();
+
+function sifreUret(){
+
+if(kullanilanSifreler.size >= 10000){
+document.getElementById("sifre").innerText="Tüm şifreler kullanıldı";
+return;
+}
+
+let sifre;
+
+do{
+sifre = Math.floor(Math.random()*10000).toString().padStart(4,"0");
+}
+while(kullanilanSifreler.has(sifre));
+
+kullanilanSifreler.add(sifre);
+
+document.getElementById("sifre").innerText = sifre;
+
+}
+
+</script>
+
+</body>
+</html>
 </script>
 
 </body>
