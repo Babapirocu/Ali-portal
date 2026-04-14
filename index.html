@@ -113,15 +113,20 @@ document.getElementById("ai").style.display="block";
 
 function cevapla(){
 
-let soru=document.getElementById("Merhaba").value;
+let soru=document.getElementById("soru").value.toLowerCase();
+let cevap="";
 
-let cevap="Merhaba, sana nasıl yardımcı olabilirim?";
+if(soru.includes("merhaba")){
+cevap="Merhaba 👋";
+}
+else if(soru.includes("nasılsın")){
+cevap="İyiyim 😊";
+}
+else{
+cevap="Bunu henüz bilmiyorum 🙂";
+}
 
 document.getElementById("cevap").innerText=cevap;
 
 }
-
-</script>
-
-</body>
 </html>
