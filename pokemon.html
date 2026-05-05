@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokémon Master: Visual Edition</title>
+    <style>
+        :root {
+            --bg: #1a1a2e; --card: #16213e; --text: #e94560; --gold: #f1c40f;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; overflow: hidden; }
+        #game-container { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 0 50px rgba(0,0,0,0.8); width: 550px; border: 2px solid #0f3460; position: relative; }
+        
+        .screen { display: none; text-align: center; }
+        .active { display: block; }
+
+        /* Pokémon Resimleri */
+        .pkmn-img { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); transition: 0.3s; }
+        .enemy-img { transform: scaleX(-1); } /* Rakip bize baksın */
+
+        /* Kart Yapısı */
+        .battle-area { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; }
+        .unit-box { background: #0f3460; padding: 10px; border-radius: 15px; width: 46%; border: 1px solid #16213e; position: relative; }
+        
+        /* Bar Tasarımları */
+        .hp-bar-bg { background: #111; height: 10px; border-radius: 5px; margin: 5px 0; overflow: hidden; }
+        .hp-fill { background: #2ecc71; height: 100%; width: 100%; transition: width 0.3s ease; }
+        .xp-fill { background: #3498db; height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        /* Butonlar */
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .pkmn-select-btn { background: #16213e; border: 2px solid #0f3460; padding: 10px; border-radius: 10px; color: white; cursor: pointer; transition: 0.2s; }
+        .pkmn-select-btn:hover { background: var(--text); border-color: white; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; padding: 12px; transition: 0.2s; }
+        .atk-btn { background: #e94560; color: white; grid-column: span 2; }
+        .skill-btn { background: #9b59b6; color: white; display: none; }
+        button:hover:not(:disabled) { transform: scale(1.03); filter: brightness(1.1); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #log { background: #111; padding: 10px; border-radius: 8px; margin-top: 15px; height: 50px; font-size: 13px; color: var(--gold); border-left: 4px solid var(--text); overflow-y: auto; }
+        
+        /* Animasyonlar */
+        .hit { animation: hit-anim 0.2s ease-in-out; }
+        @keyframes hit-anim { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } 100% { transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- Giriş -->
+    <div id="start-screen" class="screen active">
+        <h1 style="color: var(--gold); text-shadow: 2px 2px #000;">POKÉMON ADVENTURE</h1>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" width="150">
+        <p>Efsanevi eğitmenlerin arasına katıl!</p>
+        <button style="background: var(--gold); color: #000; padding: 15px 30px;" onclick="showScreen('select-screen')">OYUNA BAŞLA</button>
+    </div>
+
+    <!-- Seçim -->
+    <div id="select-screen" class="screen">
+        <h3>Başlangıç Pokémonunu Seç</h3>
+        <div class="selection-grid">
+            <button class="pkmn-select-btn" onclick="choosePokemon('Pikachu', 25, 'Elektrik')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" width="60"><br>Pikachu
+            </button>
+            <button class="pkmn-select-btn" onclick="choosePokemon('Charmander', 4, 'Ateş')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" width="60"><br>Charmander
+            </button>
+            <button class="pkmn-select-btn" onclick="choosePokemon('Squirtle', 7, 'Su')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" width="60"><br>Squirtle
+            </button>
+            <button class="pkmn-select-btn" onclick="choosePokemon('Bulbasaur', 1, 'Çimen')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" width="60"><br>Bulbasaur
+            </button>
+            <button class="pkmn-select-btn" onclick="choosePokemon('Eevee', 133, 'Normal')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png" width="60"><br>Eevee
+            </button>
+            <button class="pkmn-select-btn" onclick="choosePokemon('Gastly', 92, 'Hayalet')">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/92.png" width="60"><br>Gastly
+            </button>
+        </div>
+    </div>
+
+    <!-- Savaş -->
+    <div id="battle-screen" class="screen">
+        <div id="stage-info" style="font-weight:bold; margin-bottom:10px;">SEVİYE 1</div>
+        <div class="battle-area">
+            <div id="player-card" class="unit-box">
+                <img id="p-img" class="pkmn-img" src="">
+                <div id="p-name" style="font-weight:bold; font-size: 14px;">---</div>
+                <div style="font-size:10px">LV: <span id="p-lv">1</span></div>
+                <div class="hp-bar-bg"><div id="p-hp-fill" class="hp-fill"></div></div>
+                <div class="hp-bar-bg" style="height:5px;"><div id="p-xp-fill" class="xp-fill"></div></div>
+            </div>
+
+            <div id="enemy-card" class="unit-box">
+                <img id="e-img" class="pkmn-img enemy-img" src="">
+                <div id="e-name" style="font-weight:bold; font-size: 14px;">---</div>
+                <div style="font-size:10px; color:#aaa">VAHŞİ</div>
+                <div class="hp-bar-bg"><div id="e-hp-fill" class="hp-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="atk-btn" onclick="playTurn('normal')">TEMEL SALDIRI</button>
+            <button class="skill-btn" id="skill-btn" onclick="playTurn('special')">ÖZEL GÜÇ</button>
+        </div>
+        <div id="log">Savaşa hazır mısın?</div>
+    </div>
+</div>
+
+<script>
+    let player = { name: "", id: 0, lv: 1, hp: 100, maxHp: 100, atk: 25, xp: 0, type: "" };
+    
+    // Rastgele çıkabilecek rakipler (PokeAPI ID'leri ile)
+    const enemyList = [
+        {name: "Pidgey", id: 16}, {name: "Rattata", id: 19}, {name: "Zubat", id: 41}, 
+        {name: "Meowth", id: 52}, {name: "Psyduck", id: 54}, {name: "Machop", id: 66},
+        {name: "Slowpoke", id: 79}, {name: "Magnemite", id: 81}, {name: "Onix", id: 95},
+        {name: "Koffing", id: 109}, {name: "Magikarp", id: 129}, {name: "Snorlax", id: 143}
+    ];
+
+    const evolutions = {
+        25: {name: "Raichu", id: 26},
+        4: {name: "Charizard", id: 6},
+        7: {name: "Blastoise", id: 9},
+        1: {name: "Venusaur", id: 3},
+        133: {name: "Sylveon", id: 700},
+        92: {name: "Gengar", id: 94}
+    };
+
+    let currentEnemy = null;
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function choosePokemon(name, id, type) {
+        player.name = name; player.id = id; player.type = type;
+        document.getElementById('p-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        spawnEnemy();
+        updateUI();
+        showScreen('battle-screen');
+    }
+
+    function spawnEnemy() {
+        if (player.lv >= 20) {
+            currentEnemy = { name: "MEWTWO", id: 150, hp: 1500, maxHp: 1500, atk: 75, isBoss: true };
+            document.getElementById('log').innerHTML = "<span style='color:red'>EFSANEVİ MEWTWO ORTAYA ÇIKTI!</span>";
+        } else {
+            let res = enemyList[Math.floor(Math.random() * enemyList.length)];
+            let scale = 1 + (player.lv * 0.2);
+            currentEnemy = {
+                ...res,
+                hp: Math.floor(60 * scale),
+                maxHp: Math.floor(60 * scale),
+                atk: Math.floor(10 * scale),
+                isBoss: false
+            };
+        }
+        document.getElementById('e-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${currentEnemy.id}.png`;
+    }
+
+    function playTurn(moveType) {
+        let dmg = player.atk + Math.floor(Math.random() * 10);
+        if(moveType === 'special') dmg = Math.floor(dmg * 2.5);
+
+        currentEnemy.hp -= dmg;
+        animate('enemy-card');
+
+        if (currentEnemy.hp <= 0) {
+            handleWin();
+            return;
+        }
+
+        document.querySelectorAll('button').forEach(b => b.disabled = true);
+        setTimeout(() => {
+            let eDmg = currentEnemy.atk + Math.floor(Math.random() * 5);
+            player.hp -= eDmg;
+            animate('player-card');
+            document.getElementById('log').innerText = `${player.name} ${dmg} hasar verdi! Rakip ${eDmg} ile yanıtladı.`;
+            
+            if (player.hp <= 0) {
+                document.getElementById('log').innerText = "Pokémonun yenildi... Macera bitti.";
+            } else {
+                document.querySelectorAll('button').forEach(b => b.disabled = false);
+            }
+            updateUI();
+        }, 500);
+    }
+
+    function handleWin() {
+        if (currentEnemy.isBoss) {
+            document.getElementById('log').innerText = "TEBRİKLER! DÜNYANIN EN İYİ EĞİTMENİ OLDUN!";
+            document.querySelector('.btn-group').innerHTML = "<h2>ŞAMPİYON!</h2>";
+            return;
+        }
+
+        player.xp += 50;
+        player.hp = player.maxHp;
+        if (player.xp >= 100) levelUp();
+        spawnEnemy();
+        updateUI();
+    }
+
+    function levelUp() {
+        player.lv++;
+        player.xp = 0;
+        player.atk += 12;
+        player.maxHp += 50;
+        player.hp = player.maxHp;
+
+        if (player.lv === 5) {
+            document.getElementById('skill-btn').style.display = "block";
+            alert("Yeni bir özel güç öğrendin!");
+        }
+
+        if (player.lv === 10 && evolutions[player.id]) {
+            let evo = evolutions[player.id];
+            player.id = evo.id;
+            player.name = evo.name;
+            player.atk += 40;
+            document.getElementById('p-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${player.id}.png`;
+            alert(`Olamaz! Pokémonun ${player.name} formuna evrimleşti!`);
+        }
+    }
+
+    function animate(id) {
+        const el = document.getElementById(id);
+        el.classList.add('hit');
+        setTimeout(() => el.classList.remove('hit'), 200);
+    }
+
+    function updateUI() {
+        document.getElementById('p-name').innerText = player.name;
+        document.getElementById('p-lv').innerText = player.lv;
+        document.getElementById('p-hp-fill').style.width = (player.hp / player.maxHp * 100) + "%";
+        document.getElementById('p-xp-fill').style.width = player.xp + "%";
+        
+        document.getElementById('e-name').innerText = currentEnemy.name;
+        document.getElementById('e-hp-fill').style.width = (currentEnemy.hp / currentEnemy.maxHp * 100) + "%";
+        document.getElementById('stage-info').innerText = `SEVİYE ${player.lv}`;
+    }
+</script>
+</body>
+</html>
