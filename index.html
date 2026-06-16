@@ -7,11 +7,10 @@
 
 <style>
 body{
-font-family:Arial,sans-serif;
+font-family:Arial;
 background:#f2f2f2;
 text-align:center;
 margin:0;
-padding:0;
 }
 
 .container{
@@ -22,7 +21,6 @@ input{
 padding:10px;
 margin:10px;
 font-size:16px;
-width:250px;
 }
 
 button{
@@ -33,40 +31,33 @@ color:white;
 border:none;
 border-radius:8px;
 cursor:pointer;
-margin:5px;
 }
 
-#portal,
-#ai,
-#cuzdanSayfa{
+#portal{
 display:none;
-margin-top:40px;
+margin-top:50px;
+}
+
+#ai{
+display:none;
+margin-top:20px;
 }
 
 #cevap{
 margin-top:20px;
 font-weight:bold;
 }
-
-.kirmizi{
-background:red;
-}
-
-#harcamalar{
-margin-top:15px;
-}
 </style>
 
 </head>
+
 <body>
 
 <div id="login" class="container">
 
 <h2>Giriş Yap</h2>
 
-<input id="email" placeholder="E-posta"><br>
-
-<input id="sifre" type="password" placeholder="Şifre"><br>
+<input id="email" placeholder="E-posta"><br> <input id="sifre" type="password" placeholder="Şifre"><br>
 
 <button onclick="giris()">Giriş Yap</button>
 
@@ -80,10 +71,6 @@ margin-top:15px;
 
 <button onclick="aiAc()">Yapay Zeka</button>
 
-<button class="kirmizi" onclick="cuzdanSayfasi()">
-Cüzdan365
-</button>
-
 </div>
 
 <div id="ai">
@@ -95,56 +82,6 @@ Cüzdan365
 <button onclick="cevapla()">Gönder</button>
 
 <p id="cevap"></p>
-
-<br>
-
-<button onclick="portalDon()">
-Portala Dön
-</button>
-
-</div>
-
-<div id="cuzdanSayfa">
-
-<h1>Cüzdan365</h1>
-
-<p><b>Toplam Tutar:</b> 999 Quatrillion</p>
-
-<button class="kirmizi" onclick="ayarlarAc()">
-Ayarlar
-</button>
-
-<div id="ayarlar" style="display:none;">
-
-<br>
-
-<button class="kirmizi" onclick="harcamaAc()">
-Harcama Ekle
-</button>
-
-<div id="harcamaForm" style="display:none;">
-
-<input id="harcamaAdi" placeholder="Harcama Adı"><br>
-
-<input id="harcamaTutari" placeholder="Tutar"><br>
-
-<button class="kirmizi" onclick="harcamaKaydet()">
-Kaydet
-</button>
-
-</div>
-
-<h3>Harcamalar</h3>
-
-<div id="harcamalar"></div>
-
-</div>
-
-<br>
-
-<button class="kirmizi" onclick="geriDon()">
-Ana Sayfaya Dön
-</button>
 
 </div>
 
@@ -170,38 +107,26 @@ document.getElementById("hata").innerText="Giriş bilgileri yanlış";
 
 function aiAc(){
 
-document.getElementById("portal").style.display="none";
 document.getElementById("ai").style.display="block";
-
-}
-
-function portalDon(){
-
-document.getElementById("ai").style.display="none";
-document.getElementById("portal").style.display="block";
 
 }
 
 function cevapla(){
 
 let soru=document.getElementById("soru").value.toLowerCase();
-
 let cevap="";
 
 if(soru.includes("merhaba")){
-cevap="Merhaba sana nasıl yardımcı olabilirim 👋";
+cevap="Merhaba 👋";
 }
 else if(soru.includes("nasılsın")){
-cevap="İyiyim, sen nasılsın? 😊";
+cevap="İyiyim 😊";
 }
 else if(soru.includes("adın ne")){
-cevap="Ben Ali Portal yapay zekasıyım. Sana nasıl yardımcı olabilirim? 🤖";
+cevap="Ben Ali Portal yapay zekasıyım 🤖";
 }
 else if(soru.includes("matematik")){
-cevap="Matematik, sayılar ve işlemlerle ilgilenen bir bilim dalıdır.";
-}
-else if(soru.includes("seni kim kodladı")){
-cevap="Bu portalın kodlarını Ali Sadi Yüksel hazırladı.";
+cevap="2 + 2 = 4 eder";
 }
 else{
 cevap="Bu sorunun cevabını henüz bilmiyorum 🙂";
@@ -211,52 +136,7 @@ document.getElementById("cevap").innerText=cevap;
 
 }
 
-function cuzdanSayfasi(){
-
-document.getElementById("portal").style.display="none";
-document.getElementById("cuzdanSayfa").style.display="block";
-
-}
-
-function geriDon(){
-
-document.getElementById("cuzdanSayfa").style.display="none";
-document.getElementById("portal").style.display="block";
-
-}
-
-function ayarlarAc(){
-
-document.getElementById("ayarlar").style.display="block";
-
-}
-
-function harcamaAc(){
-
-document.getElementById("harcamaForm").style.display="block";
-
-}
-
-function harcamaKaydet(){
-
-let ad=document.getElementById("harcamaAdi").value;
-let tutar=document.getElementById("harcamaTutari").value;
-
-if(ad==="" || tutar===""){
-alert("Tüm alanları doldurun");
-return;
-}
-
-document.getElementById("harcamalar").innerHTML +=
-"<p>💸 "+ad+" - "+tutar+" TL</p>";
-
-document.getElementById("harcamaAdi").value="";
-document.getElementById("harcamaTutari").value="";
-
-}
-
 </script>
 
 </body>
 </html>
-
