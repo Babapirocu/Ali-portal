@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Cüzdan365</title>
+
+<style>
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:8px;
+cursor:pointer;
+margin:5px;
+}
+
+input{
+padding:10px;
+margin:10px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Cüzdan365</h1>
+
+<p><b>Toplam Tutar:</b> 999 Quatrillion</p>
+
+<button onclick="ayarlarAc()">Ayarlar</button>
+
+<div id="ayarlar" style="display:none;">
+
+<button onclick="harcamaAc()">Harcama Ekle</button>
+
+<div id="harcamaForm" style="display:none;">
+
+<input id="harcamaAdi" placeholder="Harcama Adı"><br>
+
+<input id="harcamaTutari" placeholder="Tutar"><br>
+
+<button onclick="harcamaKaydet()">Kaydet</button>
+
+</div>
+
+<h3>Harcamalar</h3>
+
+<div id="harcamalar"></div>
+
+</div>
+
+<br><br>
+
+<button onclick="window.location.href='index.html'">
+Ana Sayfaya Dön
+</button>
+
+<script>
+
+function ayarlarAc(){
+document.getElementById("ayarlar").style.display="block";
+}
+
+function harcamaAc(){
+document.getElementById("harcamaForm").style.display="block";
+}
+
+function harcamaKaydet(){
+
+let ad=document.getElementById("harcamaAdi").value;
+let tutar=document.getElementById("harcamaTutari").value;
+
+if(ad==="" || tutar===""){
+alert("Tüm alanları doldurun");
+return;
+}
+
+document.getElementById("harcamalar").innerHTML +=
+"<p>💸 "+ad+" - "+tutar+" TL</p>";
+
+}
+</script>
+
+</body>
+</html>
