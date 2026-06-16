@@ -42,6 +42,28 @@ margin:10px;
 
 <button onclick="taksitlerAc()">Taksitler</button>
 
+<button onclick="yeniHesapAc()">Yeni Hesap Girişi</button>
+
+<div id="yeniHesap" style="display:none;">
+
+<h3>Yeni Hesap Oluştur</h3>
+
+<input id="adSoyad" placeholder="Ad Soyad"><br>
+
+<input id="telefon" placeholder="Telefon"><br>
+
+<input id="yeniBakiye" type="number" placeholder="Bakiye"><br>
+
+<button onclick="hesapKaydet()">Kaydet</button>
+
+</div>
+
+<h3>Hesap Bilgileri</h3>
+
+<p><b>Ad Soyad:</b> <span id="gosterAd">Belirtilmedi</span></p>
+
+<p><b>Telefon:</b> <span id="gosterTelefon">Belirtilmedi</span></p>
+
 <div id="ayarlar" style="display:none;">
 
 <button onclick="harcamaAc()">Harcama Ekle</button>
@@ -101,9 +123,35 @@ function taksitlerAc(){
 document.getElementById("taksitler").style.display="block";
 }
 
+function yeniHesapAc(){
+document.getElementById("yeniHesap").style.display="block";
+}
+
 function guncelleBakiye(){
 document.getElementById("bakiye").innerText =
 bakiye.toLocaleString("tr-TR");
+}
+
+function hesapKaydet(){
+
+let ad = document.getElementById("adSoyad").value;
+let telefon = document.getElementById("telefon").value;
+let yeniBakiye = Number(document.getElementById("yeniBakiye").value);
+
+if(ad==="" || telefon==="" || isNaN(yeniBakiye)){
+alert("Tüm alanları doldurun");
+return;
+}
+
+document.getElementById("gosterAd").innerText = ad;
+document.getElementById("gosterTelefon").innerText = telefon;
+
+bakiye = yeniBakiye;
+
+guncelleBakiye();
+
+alert("Hesap güncellendi!");
+
 }
 
 function harcamaKaydet(){
