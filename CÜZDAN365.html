@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -32,7 +33,10 @@ margin:10px;
 
 <h1>Cüzdan365</h1>
 
-<p><b>Toplam Tutar:</b> 999 Quatrillion</p>
+<p>
+<b>Toplam Tutar:</b>
+<span id="bakiye">999000000000000000</span> TL
+</p>
 
 <button onclick="ayarlarAc()">Ayarlar</button>
 
@@ -44,7 +48,7 @@ margin:10px;
 
 <input id="harcamaAdi" placeholder="Harcama Adı"><br>
 
-<input id="harcamaTutari" placeholder="Tutar"><br>
+<input id="harcamaTutari" type="number" placeholder="Tutar"><br>
 
 <button onclick="harcamaKaydet()">Kaydet</button>
 
@@ -64,6 +68,8 @@ Ana Sayfaya Dön
 
 <script>
 
+let bakiye = 999000000000000000;
+
 function ayarlarAc(){
 document.getElementById("ayarlar").style.display="block";
 }
@@ -72,20 +78,41 @@ function harcamaAc(){
 document.getElementById("harcamaForm").style.display="block";
 }
 
+function guncelleBakiye(){
+document.getElementById("bakiye").innerText =
+bakiye.toLocaleString("tr-TR");
+}
+
 function harcamaKaydet(){
 
-let ad=document.getElementById("harcamaAdi").value;
-let tutar=document.getElementById("harcamaTutari").value;
+let ad = document.getElementById("harcamaAdi").value;
+let tutar = Number(document.getElementById("harcamaTutari").value);
 
-if(ad==="" || tutar===""){
-alert("Tüm alanları doldurun");
+if(ad === "" || isNaN(tutar) || tutar <= 0){
+alert("Tüm alanları doğru doldurun");
 return;
 }
 
-document.getElementById("harcamalar").innerHTML +=
-"<p>💸 "+ad+" - "+tutar+" TL</p>";
-
+if(tutar > bakiye){
+alert("Yetersiz bakiye");
+return;
 }
+
+bakiye -= tutar;
+
+document.getElementById("harcamalar").innerHTML +=
+"<p>💸 " + ad + " - " +
+tutar.toLocaleString('tr-TR') +
+" TL</p>";
+
+guncelleBakiye();
+
+document.getElementById("harcamaAdi").value="";
+document.getElementById("harcamaTutari").value="";
+}
+
+guncelleBakiye();
+
 </script>
 
 </body>
