@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -6,10 +7,11 @@
 
 <style>
 body{
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#f2f2f2;
 text-align:center;
 margin:0;
+padding:0;
 }
 
 .container{
@@ -20,6 +22,7 @@ input{
 padding:10px;
 margin:10px;
 font-size:16px;
+width:250px;
 }
 
 button{
@@ -33,14 +36,11 @@ cursor:pointer;
 margin:5px;
 }
 
-#portal{
+#portal,
+#ai,
+#cuzdanSayfa{
 display:none;
-margin-top:50px;
-}
-
-#ai{
-display:none;
-margin-top:20px;
+margin-top:40px;
 }
 
 #cevap{
@@ -48,14 +48,16 @@ margin-top:20px;
 font-weight:bold;
 }
 
-#cuzdan{
-display:none;
-margin-top:20px;
+.kirmizi{
+background:red;
+}
+
+#harcamalar{
+margin-top:15px;
 }
 </style>
 
 </head>
-
 <body>
 
 <div id="login" class="container">
@@ -63,6 +65,7 @@ margin-top:20px;
 <h2>Giriş Yap</h2>
 
 <input id="email" placeholder="E-posta"><br>
+
 <input id="sifre" type="password" placeholder="Şifre"><br>
 
 <button onclick="giris()">Giriş Yap</button>
@@ -76,7 +79,10 @@ margin-top:20px;
 <h2>Ali Portal</h2>
 
 <button onclick="aiAc()">Yapay Zeka</button>
-<button onclick="cuzdanAc()">Cüzdan365</button>
+
+<button class="kirmizi" onclick="cuzdanSayfasi()">
+Cüzdan365
+</button>
 
 </div>
 
@@ -90,19 +96,31 @@ margin-top:20px;
 
 <p id="cevap"></p>
 
+<br>
+
+<button onclick="portalDon()">
+Portala Dön
+</button>
+
 </div>
 
-<div id="cuzdan">
+<div id="cuzdanSayfa">
 
-<h3>Cüzdan365</h3>
+<h1>Cüzdan365</h1>
 
 <p><b>Toplam Tutar:</b> 999 Quatrillion</p>
 
-<button onclick="ayarlarAc()">Ayarlar</button>
+<button class="kirmizi" onclick="ayarlarAc()">
+Ayarlar
+</button>
 
 <div id="ayarlar" style="display:none;">
 
-<button onclick="harcamaAc()">Harcama Ekle</button>
+<br>
+
+<button class="kirmizi" onclick="harcamaAc()">
+Harcama Ekle
+</button>
 
 <div id="harcamaForm" style="display:none;">
 
@@ -110,7 +128,9 @@ margin-top:20px;
 
 <input id="harcamaTutari" placeholder="Tutar"><br>
 
-<button onclick="harcamaKaydet()">Kaydet</button>
+<button class="kirmizi" onclick="harcamaKaydet()">
+Kaydet
+</button>
 
 </div>
 
@@ -119,6 +139,12 @@ margin-top:20px;
 <div id="harcamalar"></div>
 
 </div>
+
+<br>
+
+<button class="kirmizi" onclick="geriDon()">
+Ana Sayfaya Dön
+</button>
 
 </div>
 
@@ -144,13 +170,22 @@ document.getElementById("hata").innerText="Giriş bilgileri yanlış";
 
 function aiAc(){
 
+document.getElementById("portal").style.display="none";
 document.getElementById("ai").style.display="block";
+
+}
+
+function portalDon(){
+
+document.getElementById("ai").style.display="none";
+document.getElementById("portal").style.display="block";
 
 }
 
 function cevapla(){
 
 let soru=document.getElementById("soru").value.toLowerCase();
+
 let cevap="";
 
 if(soru.includes("merhaba")){
@@ -163,10 +198,10 @@ else if(soru.includes("adın ne")){
 cevap="Ben Ali Portal yapay zekasıyım. Sana nasıl yardımcı olabilirim? 🤖";
 }
 else if(soru.includes("matematik")){
-cevap="Matematik, insanlığın temel ihtiyaçları olan sayma ve ölçmeden doğmuştur.";
+cevap="Matematik, sayılar ve işlemlerle ilgilenen bir bilim dalıdır.";
 }
 else if(soru.includes("seni kim kodladı")){
-cevap="Ali Sadi Yüksel benim bütün kodlarımı hazırladı.";
+cevap="Bu portalın kodlarını Ali Sadi Yüksel hazırladı.";
 }
 else{
 cevap="Bu sorunun cevabını henüz bilmiyorum 🙂";
@@ -176,16 +211,30 @@ document.getElementById("cevap").innerText=cevap;
 
 }
 
-function cuzdanAc(){
-document.getElementById("cuzdan").style.display="block";
+function cuzdanSayfasi(){
+
+document.getElementById("portal").style.display="none";
+document.getElementById("cuzdanSayfa").style.display="block";
+
+}
+
+function geriDon(){
+
+document.getElementById("cuzdanSayfa").style.display="none";
+document.getElementById("portal").style.display="block";
+
 }
 
 function ayarlarAc(){
+
 document.getElementById("ayarlar").style.display="block";
+
 }
 
 function harcamaAc(){
+
 document.getElementById("harcamaForm").style.display="block";
+
 }
 
 function harcamaKaydet(){
@@ -194,7 +243,7 @@ let ad=document.getElementById("harcamaAdi").value;
 let tutar=document.getElementById("harcamaTutari").value;
 
 if(ad==="" || tutar===""){
-alert("Lütfen tüm alanları doldurun.");
+alert("Tüm alanları doldurun");
 return;
 }
 
@@ -210,3 +259,4 @@ document.getElementById("harcamaTutari").value="";
 
 </body>
 </html>
+
