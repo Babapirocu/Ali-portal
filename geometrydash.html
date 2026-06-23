@@ -3,63 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Geometry Dash</title>
+    <title>Geometry Dash Menülü</title>
     <style>
+        :root {
+            --bg-color: #0c1020;
+            --accent-color: #00ffcc;
+            --danger-color: #ff0055;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #111;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             overflow: hidden;
             color: white;
+            user-select: none;
+        }
+
+        /* OYUN ÇERÇEVESİ */
+        #gameContainer {
+            width: 800px;
+            height: 400px;
+            background: linear-gradient(to bottom, #141936, #050814);
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ANA SAYFA / MENÜ */
+        #mainMenu {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(12, 16, 32, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
         }
 
         h1 {
+            font-size: 42px;
             margin-bottom: 5px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
+            color: var(--accent-color);
+            text-shadow: 0 0 15px var(--accent-color);
         }
 
-        p {
-            margin-top: 0;
-            color: #888;
+        .menu-p { color: #888; margin-bottom: 25px; }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
         }
 
-        /* Oyun Alanı */
-        #gameCanvas {
-            background: linear-gradient(to bottom, #1a0033, #000022);
-            border: 4px solid #00ffcc;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .info {
-            margin-top: 15px;
+        button {
+            padding: 12px 24px;
             font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
         }
-    </style>
-</head>
-<body>
+        button:hover { transform: scale(1.05); }
 
-    <h1>GEOMETRY DASH</h1>
-    <p>Zıplamak için <b>BOŞLUK (SPACE)</b> tuşuna bas veya <b>EKRANA TIKLA</b>!</p>
-
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-
-    <div class="info">
-        En Yüksek Skor: <span id="highScoreText">0</span>
-    </div>
-
-    <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        const highScoreText = document.getElementById("highScoreText");
-
-        // Oyun Değişkenleri
-        let score = 0;
+        .btn-easy { background-color: #a6e3a1; color: #111; }
+        .btn
