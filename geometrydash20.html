@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Geometry Dash</title>
+
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#111;
+font-family:Arial;
+text-align:center;
+color:white;
+}
+
+#oyun{
+position:relative;
+width:100vw;
+height:300px;
+background:#222;
+overflow:hidden;
+border-top:4px solid #00ffff;
+border-bottom:4px solid #00ffff;
+margin-top:50px;
+}
+
+#oyuncu{
+position:absolute;
+left:50px;
+bottom:0;
+width:40px;
+height:40px;
+background:#00ffff;
+}
+
+#engel{
+position:absolute;
+right:-40px;
+bottom:0;
+width:40px;
+height:40px;
+background:red;
+clip-path:polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+#skor{
+font-size:30px;
+margin-top:20px;
+}
+
+button{
+padding:10px 20px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Mini Geometry Dash</h1>
+
+<div id="skor">Skor: 0</div>
+
+<div id="oyun">
+<div id="oyuncu"></div>
+<div id="engel"></div>
+</div>
+
+<button onclick="zipla()">Zıpla</button>
+
+<script>
+
+let oyuncu=document.getElementById("oyuncu");
+let engel=document.getElementById("engel");
+let skorYazi=document.getElementById("skor");
+
+let ziplaniyor=false;
+let skor=0;
+let oyunBitti=false;
+
+function zipla(){
+
+if(ziplaniyor || oyunBitti) return;
+
+ziplaniyor=true;
+
+let yukseklik=0;
+
+let yukari=setInterval(()=>{
+
+if(yukseklik>=120){
+clearInterval(yukari);
+
+let asagi=setInterval(()=>{
+
+if(yukseklik<=0){
+clearInterval(asagi);
+ziplaniyor=false;
+}
+else{
+yukseklik-=5;
+oyuncu.style.bottom=yukseklik+"px";
+}
+
+},20);
+
+}
+else{
+yukseklik+=5;
+oyuncu.style.bottom=yukseklik+"px";
+}
+
+},20);
+
+}
+
+document.addEventListener("keydown",e=>{
+if(e.code==="Space"){
+zipla();
+}
+});
+
+let engelPos=window.innerWidth;
+
+setInterval(()=>{
+
+if(oyunBitti) return;
+
+engelPos-=6;
+
+if(engelPos<-40){
+engelPos=window.innerWidth;
+skor++;
+skorYazi.innerHTML="Skor: "+skor;
+}
+
+engel.style.left=engelPos+"px";
+
+let oyuncuAlt=parseInt(getComputedStyle(oyuncu).bottom);
+
+if(
+engelPos<90 &&
+engelPos>20 &&
+oyuncuAlt<35
+){
+oyunBitti=true;
+alert("💥 Oyun Bitti! Skor: "+skor);
+location.reload();
+}
+
+},20);
+
+</script>
+
+</body>
+</html>
