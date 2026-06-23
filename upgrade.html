@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -12,9 +13,8 @@ background:#f4f4f4;
 }
 
 #aslan{
-width:300px;
-margin-top:20px;
-border-radius:10px;
+font-size:120px;
+margin-top:30px;
 }
 
 button{
@@ -43,24 +43,22 @@ font-weight:bold;
 </style>
 
 </head>
-
 <body>
 
 <h1>🦁 Aslan Tycoon</h1>
 
-<img id="aslan" src="/mnt/data/afrika-aslani-nin-sicak-isikta-portresi_475641-46.jpg">
+<div id="aslan">🦁</div>
 
 <h2>Para: <span id="para">0</span> ₺</h2>
 
-<button onclick="upgrade()">⬆️ Upgrade</button>
-<button onclick="miniOyunAc()">🎮 Mini Oyun Başla</button>
-<button onclick="dukkanAc()">🛒 Dükkan</button>
+<button onclick="upgrade()">⬆️ Upgrade</button> <button onclick="miniOyunAc()">🎮 Mini Oyun Başla</button> <button onclick="dukkanAc()">🛒 Dükkan</button>
 
 <div id="miniOyun">
 
 <h3>Tıklama Oyunu</h3>
 
 <p>Süre: <span id="sure">30</span> saniye</p>
+
 <p>Tıklama: <span id="tiklama">0</span>/100</p>
 
 <button id="tiklaBtn" onclick="tikla()">TIKLA</button>
@@ -71,11 +69,7 @@ font-weight:bold;
 
 <h3>🛒 Hayvan Dükkanı</h3>
 
-<button onclick="hayvanAl('🐶',100)">🐶 Köpek - 100₺</button>
-<button onclick="hayvanAl('🐱',150)">🐱 Kedi - 150₺</button>
-<button onclick="hayvanAl('🐰',200)">🐰 Tavşan - 200₺</button>
-<button onclick="hayvanAl('🐼',300)">🐼 Panda - 300₺</button>
-<button onclick="hayvanAl('🐯',500)">🐯 Kaplan - 500₺</button>
+<button onclick="hayvanAl('🐶',100)">🐶 Köpek - 100₺</button> <button onclick="hayvanAl('🐱',150)">🐱 Kedi - 150₺</button> <button onclick="hayvanAl('🐰',200)">🐰 Tavşan - 200₺</button> <button onclick="hayvanAl('🐼',300)">🐼 Panda - 300₺</button> <button onclick="hayvanAl('🐯',500)">🐯 Kaplan - 500₺</button>
 
 </div>
 
@@ -107,14 +101,17 @@ para -= 50;
 upgradeSayisi++;
 
 if(upgradeSayisi >= 2){
+
 let rastgele =
 hayvanlar[Math.floor(Math.random()*hayvanlar.length)];
-document.getElementById("aslan").src =
-"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg";
+
+document.getElementById("aslan").innerText = rastgele;
 }
 
 guncelle();
+
 alert("Upgrade başarılı!");
+
 }
 
 function dukkanAc(){
@@ -125,6 +122,7 @@ return;
 }
 
 document.getElementById("dukkan").style.display="block";
+
 }
 
 function hayvanAl(hayvan,fiyat){
@@ -136,12 +134,12 @@ return;
 
 para -= fiyat;
 
-document.getElementById("aslan").src =
-"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg";
+document.getElementById("aslan").innerText = hayvan;
 
 guncelle();
 
 alert(hayvan + " satın alındı!");
+
 }
 
 function miniOyunAc(){
@@ -149,21 +147,29 @@ function miniOyunAc(){
 if(oyunAcik) return;
 
 oyunAcik = true;
+
 document.getElementById("miniOyun").style.display="block";
 
 let kalanSure = 30;
+
 document.getElementById("sure").innerText = kalanSure;
 
 let sayac = setInterval(function(){
 
 kalanSure--;
+
 document.getElementById("sure").innerText = kalanSure;
 
 if(kalanSure <= 0){
+
 clearInterval(sayac);
+
 document.getElementById("miniOyun").style.display="none";
+
 oyunAcik = false;
+
 alert("⏰ Süre doldu!");
+
 }
 
 },1000);
@@ -177,12 +183,17 @@ if(!oyunAcik) return;
 tiklama++;
 
 if(tiklama >= 100){
+
 para += 10;
+
 tiklama = 0;
+
 alert("🎉 +10 ₺ kazandın!");
+
 }
 
 guncelle();
+
 }
 
 guncelle();
