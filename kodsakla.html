@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Saklayıcı v4</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --panel-bg: #252538;
+            --text-color: #cdd6f4;
+            --accent-color: #89b4fa;
+            --danger-color: #f38ba8;
+            --success-color: #a6e3a1;
+            --info-color: #f9e2af;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .box {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #45475a;
+            border-radius: 4px;
+            background-color: #11111b;
+            color: #cdd6f4;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        /* BUTON ALANI VE TASARIMI */
+        .buttons-container {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-kaydet {
+            background-color: var(--success-color);
+            color: #11111b;
+        }
+
+        .btn-vazgec {
+            background-color: var(--info-color);
+            color: #11111b;
+        }
+
+        .btn-sil {
+            background-color: var(--danger-color);
+            color: #11111b;
+        }
+
+        .btn-ac {
+            background-color: var(--accent-color);
+            color: #11111b;
+        }
+
+        .liste-alani {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .kart {
+            background-color: var(--panel-bg);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #45475a;
+        }
+
+        .kart-baslik {
+            font-size: 18px;
+            color: var(--accent-color);
+            margin: 0 0 10px 0;
+        }
+
+        pre {
+            background-color: #11111b;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 100px;
+            overflow: auto;
+            margin: 0 0 10px 0;
+        }
+
+        .kart-butonlar {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-end;
+        }
+
+        .kart-butonlar button {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>💾 Kod Saklayıcı PRO</h1>
+
+        <div class="box">
+            <h2 id="durumYazisi">Yeni Dosya Oluştur</h2>
+            
+            <label>Dosya Adı:</label>
+            <input type="text" id="inpAd" placeholder="Örn: ana-kod.js">
+
+            <label>Kod İçeriği:</label>
+            <textarea id="txtKod" placeholder="Kodlarınızı buraya yazın veya yapıştırın..."></textarea>
+
+            <div class="buttons-container">
+                <button type="button" class="btn-kaydet" id="anaKaydetBtn" onclick="veriyiKaydet()">Dosyayı Sisteme Kaydet</button>
+                <button type="button" class="btn-vazgec" id="anaVazgecBtn" style="display: none;" onclick="temizleVeSifirla()">Düzenlemekten Vazgeç</button>
+            </div>
+        </div>
+
+        <h2>📁 Kayıtlı Dosyalarınız</h2>
+        <div class="liste-alani" id="listeContainer"></div>
+    </div>
+
+    <script>
+        // Sayfa her açıldığında listeyi otomatik yükle
+        window.onload = listeyiGoster;
+
+        // O an düzenlenen dosyanın ID'sini tutar (Boşsa yeni kayıttır)
+        let aktifId = null;
+
+        function veriyiKaydet() {
+            const adGirdisi = document.getElementById("inpAd").value.trim();
+            const kodGirdisi = document.getElementById("txtKod").value.trim();
+
+            if (adGirdisi === "" || kodGirdisi === "") {
+                alert("Lütfen dosya adını ve kod alanını boş bırakmayın!");
+                return;
+            }
+
+            let tumDosyalar = JSON.parse(localStorage.getItem("saklananKodlar")) || [];
+
+            if (aktifId !== null) {
+                // EĞER DÜZENLEME MODUNDAYSAK (AÇ BUTONUNA BASILDIYSA): Üzerine yaz
+                tumDosyalar = tumDosyalar.map(dosya => {
+                    if (dosya.id === aktifId) {
+                        return { id: dosya.id, ad: adGirdisi, kod: kodGirdisi };
+                    }
+                    return dosya;
+                });
+            } else {
+                // EĞER YENİ DOSYAYSA: Listeye yeni eleman ekle
+                const yeni = {
+                    id: Date.now(),
+                    ad: adGirdisi,
+                    kod: kodGirdisi
+                };
+                tumDosyalar.push(yeni);
+            }
+
+            // LocalStorage'a kalıcı olarak göm
+            localStorage.setItem("saklananKodlar", JSON.stringify(tumDosyalar));
+
+            // Formu ve butonları eski haline getir
+            temizleVeSifirla();
+            // Listeyi yenile
+            listeyiGoster();
+        }
+
+        function listeyiGoster() {
+            const container = document.getElementById("listeContainer");
+            container.innerHTML = "";
+
+            let tumDosyalar = JSON.parse(localStorage.getItem("saklananKodlar")) || [];
+
+            if (tumDosyalar.length === 0) {
+                container.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Henüz hiç kod dosyası eklemediniz.</p>";
+                return;
+            }
+
+            tumDosyalar.forEach(dosya => {
+                const kart = document.createElement("div");
+                kart.className = "kart";
+
+                // Kodların HTML yapısını bozmaması için filtreleme
+                const guvenliKod = dosya.kod.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                kart.innerHTML = `
+                    <h3 class="kart-baslik">📄 ${dosya.ad}</h3>
+                    <pre><code>${guvenliKod}</code></pre>
+                    <div class="kart-butonlar">
+                        <button class="btn-ac" onclick="dosyaYUKLE(${dosya.id})">Aç</button>
+                        <button class="btn-sil" onclick="dosyaSIL(${dosya.id})">Sil</button>
+                    </div>
+                `;
+                container.appendChild(kart);
+            });
+        }
+
+        function dosyaYUKLE(id) {
+            let tumDosyalar = JSON.parse(localStorage.getItem("saklananKodlar")) || [];
+            const bulunan = tumDosyalar.find(d => d.id === id);
+
+            if (bulunan) {
+                // Aşağıdaki karttan verileri alıp yukarıdaki kutulara koy
+                document.getElementById("inpAd").value = bulunan.ad;
+                document.getElementById("txtKod").value = bulunan.kod;
+
+                // Değişkeni güncelle
+                aktifId = id;
+
+                // Görsel arayüzü "Düzenleme Moduna" geçir
+                document.getElementById("durumYazisi").innerText = `Düzenleniyor: ${bulunan.ad}`;
+                document.getElementById("anaKaydetBtn").innerText = "Değişiklikleri Güncelle";
+                document.getElementById("anaVazgecBtn").style.display = "block"; // Vazgeç butonunu göster
+
+                // Sayfayı yukarı kaydır
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function temizleVeSifirla() {
+            aktifId = null;
+            document.getElementById("inpAd").value = "";
+            document.getElementById("txtKod").value = "";
+            document.getElementById("durumYazisi").innerText = "Yeni Dosya Oluştur";
+            document.getElementById("anaKaydetBtn").innerText = "Dosyayı Sisteme Kaydet";
+            document.getElementById("anaVazgecBtn").style.display = "none"; // Vazgeç butonunu gizle
+        }
+
+        function dosyaSIL(id) {
+            if (confirm("Bu kodu kalıcı olarak silmek istediğinize emin misiniz?")) {
+                let tumDosyalar = JSON.parse(localStorage.getItem("saklananKodlar")) || [];
+                tumDosyalar = tumDosyalar.filter(d => d.id !== id);
+                localStorage.setItem("saklananKodlar", JSON.stringify(tumDosyalar));
+                
+                if (aktifId === id) {
+                    temizleVeSifirla();
+                }
+                listeyiGoster();
+            }
+        }
+    </script>
+</body>
+</html>
