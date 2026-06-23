@@ -42,6 +42,7 @@ font-weight:bold;
 </style>
 
 </head>
+
 <body>
 
 <h1>🦁 Aslan Tycoon</h1>
@@ -51,13 +52,12 @@ font-weight:bold;
 <h2>Para: <span id="para">0</span> ₺</h2>
 
 <button onclick="upgrade()">⬆️ Upgrade</button>
-<button onclick="miniOyunAc()">🎮 Mini Oyun Başla</button>
+<button onclick="miniOyunAc()">🎮 Mini Oyun</button>
 <button onclick="dukkanAc()">🛒 Dükkan</button>
 
 <div id="miniOyun">
 
 <h3>Tıklama Oyunu</h3>
-
 <p>Süre: <span id="sure">30</span> saniye</p>
 <p>Tıklama: <span id="tiklama">0</span>/100</p>
 
@@ -84,10 +84,7 @@ let tiklama = 0;
 let upgradeSayisi = 0;
 let oyunAcik = false;
 
-let hayvanlar = [
-"🐶","🐱","🐰","🐼","🐯",
-"🦊","🐸","🐵","🐻","🦁"
-];
+let hayvanlar = ["🐶","🐱","🐰","🐼","🐯","🦊","🐸","🐵","🐻","🦁"];
 
 function guncelle(){
 document.getElementById("para").innerText = para;
@@ -111,10 +108,7 @@ para -= 50;
 upgradeSayisi++;
 
 if(upgradeSayisi >= 2){
-
-let rastgele =
-hayvanlar[Math.floor(Math.random()*hayvanlar.length)];
-
+let rastgele = hayvanlar[Math.floor(Math.random()*hayvanlar.length)];
 document.getElementById("aslan").innerText = rastgele;
 }
 
