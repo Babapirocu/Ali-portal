@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kod Saklayıcı</title>
+    <title>Kod Saklayıcı v3</title>
     <style>
         :root {
             --bg-color: #1e1e2e;
@@ -12,6 +12,7 @@
             --accent-color: #89b4fa;
             --danger-color: #f38ba8;
             --success-color: #a6e3a1;
+            --info-color: #f9e2af;
         }
 
         body {
@@ -69,9 +70,14 @@
             resize: vertical;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         button {
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: none;
             border-radius: 4px;
             font-weight: bold;
@@ -92,6 +98,11 @@
             color: #11111b;
         }
 
+        .btn-info {
+            background-color: var(--info-color);
+            color: #11111b;
+        }
+
         .files-section {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -103,141 +114,5 @@
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .file-title {
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            margin-top: 0;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #45475a;
-            padding-bottom: 5px;
-        }
-
-        .file-content {
-            background-color: #11111b;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9rem;
-            max-height: 150px;
-            white-space: pre-wrap;
-        }
-
-        .card-actions {
-            margin-top: 15px;
             display: flex;
-            justify-content: flex-end;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h1>💾 Kod Saklayıcı</h1>
-
-        <div class="editor-section">
-            <h3>Yeni Dosya Oluştur</h3>
-            <div class="form-group">
-                <label for="fileName">Dosya Adı (Örn: index.js veya CSS Notu):</label>
-                <input type="text" id="fileName" placeholder="Dosya adını giriniz...">
-            </div>
-            <div class="form-group">
-                <label for="fileCode">Kod İçeriği:</label>
-                <textarea id="fileCode" placeholder="Kodlarınızı buraya yapıştırın..."></textarea>
-            </div>
-            <button class="btn-success" onclick="kodKaydet()">Kod Dosyasını Kaydet</button>
-        </div>
-
-        <h2>Kaydedilen Dosyalar</h2>
-        <div class="files-section" id="filesContainer">
-            </div>
-    </div>
-
-    <script>
-        // Sayfa yüklendiğinde daha önce kaydedilen kodları getir
-        document.addEventListener("DOMContentLoaded", dosyalariListele);
-
-        function kodKaydet() {
-            const nameInput = document.getElementById("fileName");
-            const codeInput = document.getElementById("fileCode");
-
-            const dosyaAdi = nameInput.value.trim();
-            const dosyaIcerigi = codeInput.value.trim();
-
-            if (dosyaAdi === "" || dosyaIcerigi === "") {
-                alert("Lütfen hem dosya adını hem de kod içeriğini doldurun!");
-                return;
-            }
-
-            // Mevcut verileri localstorage'dan al (yoksa boş dizi oluştur)
-            let dosyalar = JSON.parse(localStorage.getItem("kodDosyalari")) || [];
-
-            // Benzersiz bir ID ile yeni dosyayı objeye ekle
-            const yeniDosya = {
-                id: Date.now(),
-                ad: dosyaAdi,
-                kod: dosyaIcerigi
-            };
-
-            dosyalar.push(yeniDosya);
-
-            // LocalStorage'a kalıcı olarak kaydet
-            localStorage.setItem("kodDosyalari", JSON.stringify(dosyalar));
-
-            // Formu temizle
-            nameInput.value = "";
-            codeInput.value = "";
-
-            // Listeyi yenile
-            dosyalariListele();
-        }
-
-        function dosyalariListele() {
-            const container = document.getElementById("filesContainer");
-            container.innerHTML = ""; // Önce içini temizle
-
-            let dosyalar = JSON.parse(localStorage.getItem("kodDosyalari")) || [];
-
-            if (dosyalar.length === 0) {
-                container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #6c7086;'>Henüz kaydedilmiş dosya yok.</p>";
-                return;
-            }
-
-            dosyalar.forEach(dosya => {
-                const card = document.createElement("div");
-                card.className = "file-card";
-
-                // Kod içindeki HTML karakterlerini güvenli hale getir (XSS önleme)
-                const guvenliKod = dosya.kod.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-                card.innerHTML = `
-                    <h4 class="file-title">📄 ${dosya.ad}</h4>
-                    <pre class="file-content"><code>${guvenliKod}</code></pre>
-                    <div class="card-actions">
-                        <button class="btn-danger" onclick="dosyaSil(${dosya.id})">Sil</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function dosyaSil(id) {
-            if (confirm("Bu kod dosyasını silmek istediğinize emin misiniz?")) {
-                let dosyalar = JSON.parse(localStorage.getItem("kodDosyalari")) || [];
-                
-                // Seçilen ID dışındaki dosyaları filtrele
-                dosyalar = dosyalar.filter(dosya => dosya.id !== id);
-                
-                // Güncel listeyi tekrar kaydet
-                localStorage.setItem("kodDosyalari", JSON.stringify(dosyalar));
-                
-                // Listeyi yenile
-                dosyalariListele();
-            }
-        }
-    </script>
-</body>
-</html>
+            flex-direction: column
