@@ -1,0 +1,48 @@
+let para = 0;
+let tiklama = 0;
+let upgradeSayisi = 0;
+let oyunAcik = false;
+
+let hayvanlar = [
+"🐶","🐱","🐰","🐼","🐯",
+"🦊","🐸","🐵","🐻","🦁"
+];
+
+function guncelle(){
+document.getElementById("para").innerText = para;
+document.getElementById("tiklama").innerText = tiklama;
+}
+
+// Her saniye 5₺ ekle
+setInterval(function(){
+    para += 5;
+    guncelle();
+}, 1000);
+
+function upgrade(){
+
+if(para < 50){
+alert("50 ₺ gerekli!");
+return;
+}
+
+para -= 50;
+upgradeSayisi++;
+
+if(upgradeSayisi >= 2){
+
+let rastgele =
+hayvanlar[Math.floor(Math.random()*hayvanlar.length)];
+
+document.getElementById("aslan").innerText = rastgele;
+}
+
+guncelle();
+
+alert("Upgrade başarılı!");
+
+}
+
+// ... geri kalan kodların aynı kalacak ...
+
+guncelle();
