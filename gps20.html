@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Rota Hesaplama</title>
+
+<style>
+body{
+    font-family:Arial;
+    margin:20px;
+}
+#map{
+    height:500px;
+    width:100%;
+}
+input,select,button{
+    padding:10px;
+    margin:5px;
+}
+#sonuc{
+    margin-top:15px;
+}
+</style>
+</head>
+<body>
+
+<h2>Rota Hesapla</h2>
+
+<input id="baslangic" placeholder="Başlangıç">
+
+<input id="varis" placeholder="Varış">
+
+<select id="ulasim">
+    <option value="WALKING">Yürüme</option>
+    <option value="BICYCLING">Bisiklet</option>
+    <option value="TRANSIT">Metro / Toplu Taşıma</option>
+</select>
+
+<button onclick="rotaHesapla()">Hesapla</button>
+
+<div id="sonuc"></div>
+
+<div id="map"></div>
+
+<script>
+let map;
+let directionsService;
+let directionsRenderer;
+
+function initMap(){
+    map=new google.maps.Map(document.getElementById("map"),{
+        zoom:12,
+        center:{lat:41.0082,lng:28.9784}
+    });
+
+    directionsService=new google.maps.DirectionsService();
+    directionsRenderer=new google.maps.DirectionsRenderer();
+
+    directionsRenderer.setMap(map);
+}
+
+function rotaHesapla(){
+
+    let baslangic=document.getElementById("baslangic").value;
+    let varis=document.getElementById("varis").value;
+    let ulasim=document.getElementById("ulasim").value;
+
+    directionsService.route({
+        origin:baslangic,
+        destination:varis,
+        travelMode:ulasim
+    },function(result,status){
+
+        if(status==="OK"){
+
+            directionsRenderer.setDirections(result);
+
+            let leg=result.routes[0].legs[0];
+
+            let html=
+            "<b>Mesafe:</b> "+leg.distance.text+"<br>"+
+            "<b>Süre:</b> "+leg.duration.text+"<br><br>";
+
+            if(ulasim==="TRANSIT"){
+
+                result.routes[0].legs[0].steps.forEach(step=>{
+
+                    if(step.travel_mode==="TRANSIT"){
+
+                        html+=
+                        "<b>Hat:</b> "+
+                        step.transit.line.name+"<br>"+
+
+                        "<b>Biniş:</b> "+
+                        step.transit.departure_stop.name+"<br>"+
+
+                        "<b>İniş:</b> "+
+                        step.transit.arrival_stop.name+"<br><br>";
+                    }
+                });
+            }
+
+            document.getElementById("sonuc").innerHTML=html;
+        }
+    });
+}
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=BURAYA_API_KEY">
+</script>
+
+</body>
+</html>
