@@ -11,34 +11,389 @@
             text-align: center;
             margin: 0;
             padding: 20px;
+            user-select: none;
         }
 
-        /* ANA MENÜ ÇERÇEVESİ */
+        /* ANA MENÜ KONTEYNERİ */
         #menuAlani {
             background-color: #1e1e2e;
             border: 3px solid #00ffcc;
             border-radius: 10px;
-            padding: 30px;
-            max-width: 400px;
-            margin: 50px auto;
-            display: block; /* Menünün zorla görünmesi için */
+            padding: 25px;
+            max-width: 500px;
+            margin: 30px auto;
         }
 
         h1 {
             color: #00ffcc;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00ffcc;
         }
 
-        .zorluk-btn {
-            display: block;
-            width: 100%;
+        .section-title {
+            font-size: 16px;
+            color: #89b4fa;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* GARANTİLİ SEÇİM ALANI (RADIO LIST) */
+        .gardirop-listesi {
+            text-align: left;
+            background-color: #11111b;
             padding: 15px;
-            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #45475a;
+            margin-bottom: 25px;
+        }
+
+        .kostum-satir {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 5px 0;
+            background-color: #1e1e2e;
+            border-radius: 6px;
+            border: 1px solid #313244;
+            cursor: pointer;
+        }
+
+        .kostum-satir input {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .kostum-adi {
+            font-size: 16px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .renk-kutusu {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #000;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        /* ZORLUK SEVİYESİ VE OYUN BAŞLATMA BUTONLARI */
+        .zorluk-grup {
+            display: flex;
+            gap: 10px;
+        }
+
+        .baslat-btn {
+            flex: 1;
+            padding: 15px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: black;
+            transition: transform 0.1s;
+        }
+        .baslat-btn:hover { transform: scale(1.03); }
+
+        #btnE { background-color: #a6e3a1; }
+        #btnH { background-color: #f9e2af; }
+        #btnC { background-color: #f38ba8; color: white; }
+
+        /* OYUN ALANI */
+        #oyunAlani {
+            width: 800px;
+            height: 400px;
+            background: linear-gradient(to bottom, #181825, #0f0f17);
+            border: 4px solid #00ffcc;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            display: none; 
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        #oyuncu {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 100px;
+            bottom: 50px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #oyuncuIc {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #111;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        #zemin {
+            width: 100%;
+            height: 50px;
+            background-color: #00ffcc;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-top: 2px solid white;
+        }
+
+        .diken {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 40px solid #f38ba8;
+            position: absolute;
+            bottom: 50px;
+        }
+
+        #skorTabelasi {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* YANMA EKRANI */
+        #gameOverAlani {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            top: 0;
+            left: 0;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameOverAlani button {
+            padding: 12px 25px;
             font-size: 18px;
             font-weight: bold;
+            background-color: white;
+            color: black;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
+    </style>
+</head>
+<body>
 
-        #btnKolay { background-color: #a6e3a
+    <div id="menuAlani">
+        <h1>GEOMETRY DASH</h1>
+        
+        <div class="section-title">🎨 1. Adım: Kıyafetini İşaretle</div>
+        <div class="gardirop-listesi">
+            
+            <label class="kostum-satir">
+                <input type="radio" name="kostumSecimi" value="klasik" checked>
+                <span class="kostum-adi">Klasik Yeşil</span>
+                <span class="renk-kutusu" style="background-color: #a6e3a1;"></span>
+            </label>
+
+            <label class="kostum-satir">
+                <input type="radio" name="kostumSecimi" value="ates">
+                <span class="kostum-adi">Neon Ateş</span>
+                <span class="renk-kutusu" style="background-color: #ff5555;"></span>
+            </label>
+
+            <label class="kostum-satir">
+                <input type="radio" name="kostumSecimi" value="siber">
+                <span class="kostum-adi">Siber Mavi</span>
+                <span class="renk-kutusu" style="background-color: #89b4fa;"></span>
+            </label>
+
+            <label class="kostum-satir">
+                <input type="radio" name="kostumSecimi" value="altin">
+                <span class="kostum-adi">Altın Kral</span>
+                <span class="renk-kutusu" style="background-color: #f9e2af;"></span>
+            </label>
+
+            <label class="kostum-satir">
+                <input type="radio" name="kostumSecimi" value="gece">
+                <span class="kostum-adi">Gece Modu</span>
+                <span class="renk-kutusu" style="background-color: #cba6f7;"></span>
+            </label>
+
+        </div>
+
+        <div class="section-title">🚀 2. Adım: Hızını Seç ve Oyunu Başlat</div>
+        <div class="zorluk-grup">
+            <button id="btnE" class="baslat-btn" onclick="oyunMakinasi(6, 100)">KOLAY BASLAT</button>
+            <button id="btnH" class="baslat-btn" onclick="oyunMakinasi(9, 72)">ZOR BASLAT</button>
+            <button id="btnC" class="baslat-btn" onclick="oyunMakinasi(14, 48)">HARDCORE 🔥</button>
+        </div>
+    </div>
+
+    <div id="oyunAlani" onclick="zipla()">
+        <div id="skorTabelasi">Skor: <span id="skorDeger">0</span></div>
+        
+        <div id="oyuncu"><div id="oyuncuIc"></div></div>
+        <div id="zemin"></div>
+
+        <div id="gameOverAlani">
+            <h2 style="color: #f38ba8; font-size: 36px; margin-bottom: 10px;">PATLADINIZ!</h2>
+            <button onclick="menuyeDon()">Ana Menüye Dön</button>
+        </div>
+    </div>
+
+    <p style="color: #6c7086; margin-top: 20px;">Zıplamak için <b>BOŞLUK</b> tuşuna bas veya oyun alanına tıkla.</p>
+
+    <script>
+        const menuAlani = document.getElementById("menuAlani");
+        const oyunAlani = document.getElementById("oyunAlani");
+        const oyuncu = document.getElementById("oyuncu");
+        const oyuncuIc = document.getElementById("oyuncuIc");
+        const skorDeger = document.getElementById("skorDeger");
+        const gameOverAlani = document.getElementById("gameOverAlani");
+
+        let skor = 0;
+        let oyunAktif = false;
+        let zipliyorMu = false;
+        let oyuncuY = 50; 
+        let dikeyHiz = 0;
+        let rotation = 0;
+        let oyunHizi = 6;
+        let engelSikligi = 80; 
+        let kareSayaci = 0;
+        let animasyonId;
+
+        // OYUNU BAŞLATAN VE KOSTÜMÜ OKUYAN ANA MOTOR
+        function oyunMakinasi(hiz, siklik) {
+            // Hangi radyo butonunun seçili olduğunu tarayıcıdan zorla çekiyoruz
+            const seciliRadyo = document.querySelector('input[name="kostumSecimi"]:checked').value;
+            
+            // Seçime göre renkleri eşle
+            let anaRenk = "#a6e3a1";
+            let icRenk = "#11111b";
+
+            if (seciliRadyo === "ates") { anaRenk = "#ff5555"; icRenk = "#f1fa8c"; }
+            if (seciliRadyo === "siber") { anaRenk = "#89b4fa"; icRenk = "#ff79c6"; }
+            if (seciliRadyo === "altin") { anaRenk = "#f9e2af"; icRenk = "#000000"; }
+            if (seciliRadyo === "gece") { anaRenk = "#cba6f7"; icRenk = "#94e2d5"; }
+
+            // Kostümü küpe giydir
+            oyuncu.style.backgroundColor = anaRenk;
+            oyuncuIc.style.borderColor = icRenk;
+
+            // Panelleri Değiştir
+            menuAlani.style.display = "none";
+            oyunAlani.style.display = "block";
+            gameOverAlani.style.display = "none";
+            
+            // Fizikleri sıfırla
+            skor = 0;
+            skorDeger.innerText = skor;
+            oyuncuY = 50;
+            oyuncu.style.bottom = oyuncuY + "px";
+            rotation = 0;
+            oyuncu.style.transform = "rotate(0deg)";
+            oyunAktif = true;
+            zipliyorMu = false;
+            dikeyHiz = 0;
+            kareSayaci = 0;
+            oyunHizi = hiz;
+            engelSikligi = siklik;
+
+            document.querySelectorAll('.diken').forEach(d => d.remove());
+            cancelAnimationFrame(animasyonId);
+            
+            // Döngüyü ateşle
+            oyunMotoru();
+        }
+
+        function oyunMotoru() {
+            if (!oyunAktif) return;
+
+            // Küp Hareketi
+            if (oyuncuY > 50 || zipliyorMu) {
+                dikeyHiz -= 0.6; 
+                oyuncuY += dikeyHiz;
+                rotation += 5;
+                oyuncu.style.transform = `rotate(${rotation}deg)`;
+
+                if (oyuncuY <= 50) {
+                    oyuncuY = 50;
+                    dikeyHiz = 0;
+                    zipliyorMu = false;
+                    rotation = Math.round(rotation / 90) * 90;
+                    oyuncu.style.transform = `rotate(${rotation}deg)`;
+                }
+                oyuncu.style.bottom = oyuncuY + "px";
+            }
+
+            // Engellerin Zamanlaması
+            kareSayaci++;
+            if (kareSayaci >= engelSikligi) {
+                const yeniDiken = document.createElement("div");
+                yeniDiken.className = "diken";
+                yeniDiken.style.left = "800px"; 
+                oyunAlani.appendChild(yeniDiken);
+                kareSayaci = Math.floor(Math.random() * 15);
+            }
+
+            // Engellerin Hareketi ve Temas Algısı
+            const dikenler = document.querySelectorAll('.diken');
+            dikenler.forEach(diken => {
+                let xKonum = parseFloat(diken.style.left);
+                xKonum -= oyunHizi;
+                diken.style.left = xKonum + "px";
+
+                if (xKonum < -30) {
+                    diken.remove();
+                    skor++;
+                    skorDeger.innerText = skor;
+                }
+
+                // Çarpışma Gerçekleşti mi?
+                if (xKonum > 100 && xKonum < 140 && oyuncuY < 90) {
+                    oynuBitir();
+                }
+            });
+
+            animasyonId = requestAnimationFrame(oyunMotoru);
+        }
+
+        function zipla() {
+            if (!zipliyorMu && oyunAktif) {
+                zipliyorMu = true;
+                dikeyHiz = 11;
+            }
+        }
+
+        window.addEventListener("keydown", function(e) {
+            if (e.code === "Space") {
+                e.preventDefault(); 
+                zipla();
+            }
+        });
+
+        function oynuBitir() {
+            oyunAktif = false;
+            cancelAnimationFrame(animasyonId);
+            gameOverAlani.style.display = "flex";
+        }
+
+        function menuyeDon() {
+            gameOverAlani.style.display = "none";
+            oyunAlani.style.display = "none";
+            menuAlani.style.display = "block";
+            document.querySelectorAll('.diken').forEach(d => d.remove());
+        }
+    </script>
+</body>
+</html>
