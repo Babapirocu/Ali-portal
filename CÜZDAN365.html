@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -49,94 +48,106 @@ display:none;
 
 <body>
 
-<h1>💰 Cüzdan365</h1>
+<!-- GİRİŞ EKRANI -->
+<div id="girisEkrani" class="kutu">
+    <h2>🔐 Oturum Aç</h2>
+    
+    <div style="text-align:left; max-width:250px; margin:0 auto;">
+        <label for="girisKullaniciAdi" style="font-size:14px; font-weight:bold;">Kullanıcı Adı</label>
+    </div>
+    <input id="girisKullaniciAdi" value="AliSadi" placeholder="Kullanıcı Adı"><br>
 
-<div class="kutu">
-<p><b>Toplam Tutar:</b> <span id="bakiye">0</span> TL</p>
+    <input id="girisSifre" type="password" placeholder="Şifre"><br>
+
+    <button onclick="oturumAc()">Giriş Yap</button>
 </div>
 
-<button onclick="yeniHesapAc()">Yeni Hesap Girişi</button> <button onclick="ayarlarAc()">Ayarlar</button> <button onclick="taksitlerAc()">Taksitler</button> <button onclick="ibanAc()">IBAN At</button>
+<!-- ANA UYGULAMA (Başlangıçta Gizli) -->
+<div id="anaUygulama" class="gizli">
+    <h1>💰 Cüzdan365</h1>
 
-<div class="kutu">
-<h3>Hesap Bilgileri</h3>
-<p><b>Ad Soyad:</b> <span id="gosterAd">Belirtilmedi</span></p>
-<p><b>Telefon:</b> <span id="gosterTelefon">Belirtilmedi</span></p>
-</div>
+    <div class="kutu">
+    <p><b>Toplam Tutar:</b> <span id="bakiye">0</span> TL</p>
+    </div>
 
-<div id="yeniHesap" class="kutu gizli">
+    <button onclick="yeniHesapAc()">Yeni Hesap Girişi</button> 
+    <button onclick="ayarlarAc()">Ayarlar</button> 
+    <button onclick="taksitlerAc()">Taksitler</button> 
+    <button onclick="ibanAc()">IBAN At</button>
 
-<h3>Yeni Hesap Oluştur</h3>
+    <div class="kutu">
+    <h3>Hesap Bilgileri</h3>
+    <p><b>Kullanıcı Adı:</b> <span id="gosterGirisAdi">Belirtilmedi</span></p>
+    <p><b>Ad Soyad:</b> <span id="gosterAd">Belirtilmedi</span></p>
+    <p><b>Telefon:</b> <span id="gosterTelefon">Belirtilmedi</span></p>
+    </div>
 
-<input id="adSoyad" placeholder="Ad Soyad"><br>
+    <div id="yeniHesap" class="kutu gizli">
+    <h3>Yeni Hesap Oluştur</h3>
+    <input id="adSoyad" placeholder="Ad Soyad"><br>
+    <input id="telefon" placeholder="Telefon"><br>
+    <input id="yeniBakiye" type="number" placeholder="Bakiye"><br>
+    <button onclick="hesapKaydet()">Kaydet</button>
+    </div>
 
-<input id="telefon" placeholder="Telefon"><br>
+    <div id="ayarlar" class="kutu gizli">
+    <h3>Harcama Ekle</h3>
+    <input id="harcamaAdi" placeholder="Harcama Adı"><br>
+    <input id="harcamaTutari" type="number" placeholder="Tutar"><br>
+    <button onclick="harcamaKaydet()">Kaydet</button>
+    <h3>Harcamalar</h3>
+    <div id="harcamalar"></div>
+    </div>
 
-<input id="yeniBakiye" type="number" placeholder="Bakiye"><br>
+    <div id="taksitler" class="kutu gizli">
+    <h3>Taksitler</h3>
+    <ul id="taksitListesi">
+    <li>Telefon - 12 Ay - 2500 TL</li>
+    <li>Tablet - 6 Ay - 1200 TL</li>
+    <li>Kulaklık - 3 Ay - 500 TL</li>
+    </ul>
+    <input id="taksitAdi" placeholder="Taksit Adı"><br>
+    <input id="taksitTutar" type="number" placeholder="Aylık Tutar"><br>
+    <button onclick="taksitEkle()">Taksit Ekle</button>
+    </div>
 
-<button onclick="hesapKaydet()">Kaydet</button>
-
-</div>
-
-<div id="ayarlar" class="kutu gizli">
-
-<h3>Harcama Ekle</h3>
-
-<input id="harcamaAdi" placeholder="Harcama Adı"><br>
-
-<input id="harcamaTutari" type="number" placeholder="Tutar"><br>
-
-<button onclick="harcamaKaydet()">Kaydet</button>
-
-<h3>Harcamalar</h3>
-
-<div id="harcamalar"></div>
-
-</div>
-
-<div id="taksitler" class="kutu gizli">
-
-<h3>Taksitler</h3>
-
-<ul id="taksitListesi">
-<li>Telefon - 12 Ay - 2500 TL</li>
-<li>Tablet - 6 Ay - 1200 TL</li>
-<li>Kulaklık - 3 Ay - 500 TL</li>
-</ul>
-
-<input id="taksitAdi" placeholder="Taksit Adı"><br>
-
-<input id="taksitTutar" type="number" placeholder="Aylık Tutar"><br>
-
-<button onclick="taksitEkle()">Taksit Ekle</button>
-
-</div>
-
-<div id="ibanBolumu" class="kutu gizli">
-
-<h3>Para Gönder</h3>
-<input id="ibanNo" placeholder="TR ile başlayan IBAN gir"><br>
-
-<input id="ibanTutar" type="number" placeholder="Gönderilecek Tutar"><br>
-
-
-<input id="ibanNo" placeholder="TR ile başlayan IBAN gir"><br>
-
-<input id="ibanTutar" type="number" placeholder="Gönderilecek Tutar"><br>
-
-<button onclick="ibanGonder()">Gönder</button>
-
-<h3>Gönderim Geçmişi</h3>
-
-<div id="ibanGecmisi"></div>
-
+    <div id="ibanBolumu" class="kutu gizli">
+    <h3>Para Gönder</h3>
+    <input id="ibanNo" placeholder="TR ile başlayan IBAN gir"><br>
+    <input id="ibanTutar" type="number" placeholder="Gönderilecek Tutar"><br>
+    <button onclick="ibanGonder()">Gönder</button>
+    <h3>Gönderim Geçmişi</h3>
+    <div id="ibanGecmisi"></div>
+    </div>
 </div>
 
 <script>
 
 let bakiye = Number(localStorage.getItem("bakiye")) || 0;
 
-window.onload = function(){
+function oturumAc(){
+let girilenKullanici = document.getElementById("girisKullaniciAdi").value.trim();
+let girilenSifre = document.getElementById("girisSifre").value;
 
+if(girilenKullanici === ""){
+    alert("Lütfen kullanıcı adını girin!");
+    return;
+}
+
+if(girilenSifre === "2463543"){
+    document.getElementById("girisEkrani").style.display = "none";
+    document.getElementById("anaUygulama").style.display = "block";
+    
+    // Girilen kullanıcı adını ekranda göster
+    document.getElementById("gosterGirisAdi").innerText = girilenKullanici;
+    
+    uygulamayiBaslat();
+}else{
+    alert("Hatalı şifre! Lütfen tekrar deneyin.");
+}
+}
+
+function uygulamayiBaslat(){
 let kayitliAd = localStorage.getItem("adSoyad");
 let kayitliTelefon = localStorage.getItem("telefon");
 
@@ -149,8 +160,7 @@ document.getElementById("gosterTelefon").innerText = kayitliTelefon;
 }
 
 guncelleBakiye();
-
-};
+}
 
 function guncelleBakiye(){
 document.getElementById("bakiye").innerText =
@@ -174,7 +184,6 @@ document.getElementById("ibanBolumu").style.display="block";
 }
 
 function hesapKaydet(){
-
 let ad = document.getElementById("adSoyad").value;
 let telefon = document.getElementById("telefon").value;
 let yeniBakiye = Number(document.getElementById("yeniBakiye").value);
@@ -192,15 +201,11 @@ document.getElementById("gosterAd").innerText = ad;
 document.getElementById("gosterTelefon").innerText = telefon;
 
 bakiye = yeniBakiye;
-
 guncelleBakiye();
-
 alert("Hesap kaydedildi!");
-
 }
 
 function harcamaKaydet(){
-
 let ad = document.getElementById("harcamaAdi").value;
 let tutar = Number(document.getElementById("harcamaTutari").value);
 
@@ -215,18 +220,15 @@ return;
 }
 
 bakiye -= tutar;
-
 localStorage.setItem("bakiye", bakiye);
 
 document.getElementById("harcamalar").innerHTML +=
 "<p>💸 "+ad+" - "+tutar.toLocaleString("tr-TR")+" TL</p>";
 
 guncelleBakiye();
-
 }
 
 function taksitEkle(){
-
 let ad = document.getElementById("taksitAdi").value;
 let tutar = document.getElementById("taksitTutar").value;
 
@@ -237,11 +239,9 @@ return;
 
 document.getElementById("taksitListesi").innerHTML +=
 "<li>"+ad+" - Aylık "+tutar+" TL</li>";
-
 }
 
 function ibanGonder(){
-
 let tutar = Number(document.getElementById("ibanTutar").value);
 
 if(isNaN(tutar) || tutar<=0){
@@ -255,9 +255,7 @@ return;
 }
 
 bakiye -= tutar;
-
 localStorage.setItem("bakiye", bakiye);
-
 guncelleBakiye();
 
 document.getElementById("ibanGecmisi").innerHTML +=
@@ -266,7 +264,6 @@ tutar.toLocaleString("tr-TR")+
 " TL gönderildi.</p>";
 
 alert("Para gönderildi");
-
 }
 
 </script>
