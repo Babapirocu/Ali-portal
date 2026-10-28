@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASS APP</title>
+    <title>Windows Güvenlik Duvarı - Kimlik Doğrulama</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,8 +17,7 @@
                     colors: {
                         bg: '#131314',
                         panel: '#1e1f20',
-                        accent: '#a8c7fa',
-                        'av-green': '#00a67e',
+                        accent: '#0078d4',
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -33,7 +32,18 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+        /* Windows Defender Tarzı Kilit Ekranı */
+        #defender-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #181818; }
+        .defender-container { display: flex; background: #202020; border: 1px solid #333; border-radius: 12px; width: 750px; max-width: 95vw; box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden; }
+        .defender-sidebar { background: #161616; padding: 40px 30px; width: 280px; border-right: 1px solid #2d2d2d; display: flex; flex-direction: column; justify-content: space-between; }
+        .defender-main { padding: 40px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .defender-input { width: 100%; padding: 12px 16px; background: #121212; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 14px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        .defender-input:focus { border-color: #0078d4; }
+        .defender-btn { padding: 12px 24px; background: #0078d4; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; font-family: inherit; width: 100%; }
+        .defender-btn:hover { background: #1084d8; }
+        .defender-error { color: #f17070; font-size: 13px; margin-top: 10px; min-height: 20px; }
+        .hint-box { background: #181818; border-left: 3px solid #0078d4; padding: 12px; border-radius: 4px; font-size: 12px; color: #aaa; margin-top: 20px; line-height: 1.5; }
 
         #app { display: flex; height: 100vh; }
         #sidebar { width: 280px; min-width: 280px; background: #1e1f20; border-right: 1px solid #2a2a2b; display: flex; flex-direction: column; transition: transform 0.3s ease; }
@@ -121,6 +131,8 @@
         #mobile-menu-btn { display: none; }
         #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; }
         @media (max-width: 768px) {
+            .defender-container { flex-direction: column; width: 90vw; }
+            .defender-sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid #2d2d2d; }
             #sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 45; transform: translateX(-100%); }
             #sidebar.open { transform: translateX(0); }
             #sidebar-overlay.active { display: block; }
@@ -137,8 +149,63 @@
 </head>
 <body>
 
+    <!-- WINDOWS DEFENDER GÜVENLİK DUVARI GİRİŞ EKRANI -->
+    <div id="defender-overlay">
+        <div class="defender-container">
+            <!-- Sol Taraf: Windows İşaretleri ve Rozetler -->
+            <div class="defender-sidebar">
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
+                        <i class="fa-brands fa-windows" style="font-size:28px; color:#0078d4;"></i>
+                        <span style="font-weight:700; font-size:16px; color:#fff;">Windows Security</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:#ccc;">
+                            <i class="fa-solid fa-shield-halved" style="color:#00a67e; font-size:16px;"></i>
+                            <span>Güvenlik Duvarı Aktif</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:#ccc;">
+                            <i class="fa-solid fa-lock" style="color:#0078d4; font-size:16px;"></i>
+                            <span>Rastgele Şifreli Oturum</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:#ccc;">
+                            <i class="fa-solid fa-network-wired" style="color:#ffb900; font-size:16px;"></i>
+                            <span>Ağ Koruması Devrede</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size:11px; color:#666;">
+                    Windows Defender v10.4
+                </div>
+            </div>
+
+            <!-- Sağ Taraf: Şifre Giriş ve İpuçları -->
+            <div class="defender-main">
+                <h2 style="font-size:20px; font-weight:600; color:#fff; margin-bottom:8px;">Güvenlik Anahtarı Gerekli</h2>
+                <p style="font-size:13px; color:#999; margin-bottom:20px;">Bu sisteme erişmek için her oturumda rastgele üretilen güvenlik şifresini girmeniz gerekmektedir.</p>
+                
+                <div style="margin-bottom:14px;">
+                    <label style="font-size:12px; color:#ccc; display:block; margin-bottom:6px;">Rastgele Şifre</label>
+                    <input type="password" id="defender-pw-input" class="defender-input" placeholder="Şifreyi girin…" autocomplete="off">
+                </div>
+                
+                <div class="defender-error" id="defender-error"></div>
+                
+                <div style="margin-top:10px;">
+                    <button id="defender-submit-btn" class="defender-btn">Erişim İzni Ver</button>
+                </div>
+
+                <!-- Şifre İpuçları Kutusu -->
+                <div class="hint-box">
+                    <strong style="color:#fff; display:block; margin-bottom:4px;"><i class="fa-solid fa-lightbulb" style="color:#ffb900; margin-right:6px;"></i>Güvenlik İpucu:</strong>
+                    <span id="password-hint-text">Yükleniyor...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN APP -->
-    <div id="app">
+    <div id="app" class="hidden">
         <div id="sidebar-overlay"></div>
 
         <aside id="sidebar">
@@ -153,7 +220,7 @@
                 <button id="new-chat-btn"><i class="fa-solid fa-plus" style="font-size:12px;"></i> Yeni Sohbet</button>
             </div>
             <div id="chat-list"></div>
-            <div id="sidebar-footer">ASS APP v1.5</div>
+            <div id="sidebar-footer">ASS APP v1.9 (Güvenli Duvar Korumalı)</div>
         </aside>
 
         <main id="chat-area">
@@ -235,10 +302,24 @@
     </div>
 
 <script>
+// Rastgele Şifre Havuzu ve İpuçları
+const PASSWORD_POOL = [
+    { pw: "WinDefender2026", hint: "Şifre bir işletim sistemi adı, bir güvenlik programı ve güncel bir yılı içerir (Örn: ProgramYil)." },
+    { pw: "Firewall99", hint: "Şifre İngilizce 'güvenlik duvarı' anlamına gelen kelime ile iki basamaklı bir şanslı sayıdan oluşur." },
+    { pw: "WindowsSecure", hint: "Microsoft'un popüler işletim sistemi ile 'güvenli' kelimesinin İngilizcesinin birleşiminden oluşur." },
+    { pw: "AdminNet01", hint: "Ağ yöneticisi anlamına gelen kısaltma, ağ kelimesi ve '01' rakamı ile başlar." }
+];
+
+// Sayfa her açıldığında rastgele bir şifre seçilir
+const SELECTED_CHALLENGE = PASSWORD_POOL[Math.floor(Math.random() * PASSWORD_POOL.length)];
+const ACTIVE_PASSWORD = SELECTED_CHALLENGE.pw;
+const ACTIVE_HINT = SELECTED_CHALLENGE.hint;
+
 const STORAGE_KEY_CHATS = 'assapp_chats';
 const STORAGE_KEY_APIKEY = 'assapp_apikey';
 
 let state = {
+    authenticated: false,
     currentChatId: null,
     chats: [],
     apiKey: '',
@@ -264,6 +345,40 @@ function loadApiKey() {
 
 function saveApiKey(key) {
     try { localStorage.setItem(STORAGE_KEY_APIKEY, key); } catch (e) {}
+}
+
+function initDefenderAuth() {
+    const pwInput = document.getElementById('defender-pw-input');
+    const submitBtn = document.getElementById('defender-submit-btn');
+    const errorDiv = document.getElementById('defender-error');
+    const hintText = document.getElementById('password-hint-text');
+
+    if (!pwInput || !submitBtn) return;
+
+    // İpucunu ekrana yazdır
+    hintText.textContent = ACTIVE_HINT;
+
+    const handleLogin = () => {
+        const val = pwInput.value.trim();
+        if (val === ACTIVE_PASSWORD) {
+            state.authenticated = true;
+            document.getElementById('defender-overlay').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            initApp();
+        } else {
+            errorDiv.textContent = 'Güvenlik duvarı erişimi engelledi: Geçersiz şifre anahtarı!';
+            pwInput.value = '';
+            pwInput.focus();
+        }
+    };
+
+    submitBtn.onclick = handleLogin;
+    pwInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleLogin();
+        }
+    };
 }
 
 function createChat() {
@@ -656,7 +771,7 @@ function initApp() {
     const clearChatBtn = document.getElementById('clear-chat-btn');
     if (clearChatBtn) {
         clearChatBtn.onclick = () => {
-            clearModal.classList.remove('hidden');
+            clearModal.classList.add('hidden');
         };
     }
 
@@ -715,7 +830,7 @@ function initApp() {
 }
 
 window.onload = () => {
-    initApp();
+    initDefenderAuth();
 };
 </script>
 </body>
