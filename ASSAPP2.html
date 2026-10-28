@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASS APP</title>
+    <title>ASS APP - Windows Defender Güvenliği</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,6 +34,15 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+        /* Windows Defender Tarzı Kilit Ekranı */
+        #defender-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #1f1f1f; }
+        .defender-card { background: #2b2b2b; border: 1px solid #3c3c3c; border-radius: 8px; padding: 36px; width: 420px; max-width: 90vw; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .defender-input { width: 100%; padding: 10px 14px; background: #1e1e1e; border: 1px solid #555; border-radius: 4px; color: #fff; font-size: 14px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        .defender-input:focus { border-color: #0078d4; }
+        .defender-btn { padding: 10px 20px; background: #0078d4; color: #fff; border: none; border-radius: 4px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+        .defender-btn:hover { background: #1084d8; }
+        .defender-error { color: #f17070; font-size: 13px; margin-top: 8px; text-align: center; min-height: 20px; }
 
         #app { display: flex; height: 100vh; }
         #sidebar { width: 280px; min-width: 280px; background: #1e1f20; border-right: 1px solid #2a2a2b; display: flex; flex-direction: column; transition: transform 0.3s ease; }
@@ -137,8 +146,31 @@
 </head>
 <body>
 
+    <!-- WINDOWS DEFENDER AUTH OVERLAY -->
+    <div id="defender-overlay">
+        <div class="defender-card">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+                <div style="width:36px; height:36px; background:#0078d4; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-shield-halved" style="color:#fff; font-size:18px;"></i>
+                </div>
+                <div>
+                    <h2 style="font-size:16px; font-weight:600; color:#fff;">Windows Defender Güvenlik Duvarı</h2>
+                    <p style="font-size:12px; color:#aaa;">Uygulamaya erişmek için güvenlik anahtarını girin.</p>
+                </div>
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="font-size:12px; color:#ccc; display:block; margin-bottom:6px;">Güvenlik Parolası</label>
+                <input type="password" id="defender-pw-input" class="defender-input" placeholder="Parola (Aras)…" autocomplete="off">
+            </div>
+            <div class="defender-error" id="defender-error"></div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+                <button id="defender-submit-btn" class="defender-btn">Kimlik Doğrula</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN APP -->
-    <div id="app">
+    <div id="app" class="hidden">
         <div id="sidebar-overlay"></div>
 
         <aside id="sidebar">
@@ -153,7 +185,7 @@
                 <button id="new-chat-btn"><i class="fa-solid fa-plus" style="font-size:12px;"></i> Yeni Sohbet</button>
             </div>
             <div id="chat-list"></div>
-            <div id="sidebar-footer">ASS APP v1.7</div>
+            <div id="sidebar-footer">ASS APP v1.8</div>
         </aside>
 
         <main id="chat-area">
@@ -235,10 +267,12 @@
     </div>
 
 <script>
+const CORRECT_PASSWORD = 'Aras';
 const STORAGE_KEY_CHATS = 'assapp_chats';
 const STORAGE_KEY_APIKEY = 'assapp_apikey';
 
 let state = {
+    authenticated: false,
     currentChatId: null,
     chats: [],
     apiKey: '',
@@ -264,6 +298,36 @@ function loadApiKey() {
 
 function saveApiKey(key) {
     try { localStorage.setItem(STORAGE_KEY_APIKEY, key); } catch (e) {}
+}
+
+function initDefenderAuth() {
+    const pwInput = document.getElementById('defender-pw-input');
+    const submitBtn = document.getElementById('defender-submit-btn');
+    const errorDiv = document.getElementById('defender-error');
+
+    if (!pwInput || !submitBtn) return;
+
+    const handleLogin = () => {
+        const val = pwInput.value.trim();
+        if (val === CORRECT_PASSWORD) {
+            state.authenticated = true;
+            document.getElementById('defender-overlay').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            initApp();
+        } else {
+            errorDiv.textContent = 'Güvenlik anahtarı geçersiz! (Parola: Aras)';
+            pwInput.value = '';
+            pwInput.focus();
+        }
+    };
+
+    submitBtn.onclick = handleLogin;
+    pwInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleLogin();
+        }
+    };
 }
 
 function createChat() {
@@ -656,7 +720,7 @@ function initApp() {
     const clearChatBtn = document.getElementById('clear-chat-btn');
     if (clearChatBtn) {
         clearChatBtn.onclick = () => {
-            clearModal.classList.remove('hidden');
+            clearModal.classList.add('hidden');
         };
     }
 
@@ -715,7 +779,7 @@ function initApp() {
 }
 
 window.onload = () => {
-    initApp();
+    initDefenderAuth();
 };
 </script>
 </body>
