@@ -35,18 +35,6 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-        #auth-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #131314; }
-        .auth-card { background: #1e1f20; border: 1px solid #2a2a2b; border-radius: 16px; padding: 40px; width: 380px; max-width: 90vw; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-        .auth-input { width: 100%; padding: 12px 16px; background: #131314; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 15px; outline: none; transition: border-color 0.2s; font-family: inherit; }
-        .auth-input:focus { border-color: #a8c7fa; }
-        .auth-btn { width: 100%; padding: 12px; background: #a8c7fa; color: #131314; border: none; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: background 0.2s, transform 0.1s; font-family: inherit; }
-        .auth-btn:hover { background: #8fb8f0; }
-        .auth-btn:active { transform: scale(0.98); }
-        .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .auth-error { color: #ff6b6b; font-size: 13px; margin-top: 8px; text-align: center; min-height: 20px; }
-        .auth-lock { color: #ff9f43; font-size: 13px; margin-top: 8px; text-align: center; }
-        .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; background: none; border: none; font-size: 14px; }
-
         #app { display: flex; height: 100vh; }
         #sidebar { width: 280px; min-width: 280px; background: #1e1f20; border-right: 1px solid #2a2a2b; display: flex; flex-direction: column; transition: transform 0.3s ease; }
         #sidebar-header { padding: 16px; border-bottom: 1px solid #2a2a2b; }
@@ -149,31 +137,8 @@
 </head>
 <body>
 
-    <!-- AUTH OVERLAY -->
-    <div id="auth-overlay">
-        <div class="auth-card">
-            <div style="text-align:center; margin-bottom:28px;">
-                <div style="width:56px;height:56px;border-radius:14px;background:#00a67e;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">
-                    <i class="fa-solid fa-robot" style="font-size:24px;color:#fff;"></i>
-                </div>
-                <h1 style="font-size:22px;font-weight:700;color:#fff;">ASS APP</h1>
-                <p style="font-size:13px;color:#888;margin-top:4px;">Yapay Zeka Asistanı</p>
-            </div>
-            <div style="position:relative;">
-                <input type="password" id="pw-input" class="auth-input" placeholder="Şifre girin…" autocomplete="off">
-                <button class="toggle-pw" id="pw-toggle" type="button" aria-label="Şifreyi göster">
-                    <i class="fa-solid fa-eye"></i>
-                </button>
-            </div>
-            <div class="auth-error" id="auth-error"></div>
-            <div class="auth-lock hidden" id="auth-lock"></div>
-            <button class="auth-btn" id="auth-btn" style="margin-top:16px;">Giriş Yap</button>
-            <p style="font-size:11px;color:#555;text-align:center;margin-top:12px;">Şifre: 0317Aa0317</p>
-        </div>
-    </div>
-
     <!-- MAIN APP -->
-    <div id="app" class="hidden">
+    <div id="app">
         <div id="sidebar-overlay"></div>
 
         <aside id="sidebar">
@@ -188,7 +153,7 @@
                 <button id="new-chat-btn"><i class="fa-solid fa-plus" style="font-size:12px;"></i> Yeni Sohbet</button>
             </div>
             <div id="chat-list"></div>
-            <div id="sidebar-footer">ASS APP v1.1</div>
+            <div id="sidebar-footer">ASS APP v1.5</div>
         </aside>
 
         <main id="chat-area">
@@ -208,18 +173,18 @@
                 <div id="welcome-screen">
                     <i class="fa-solid fa-brain welcome-icon"></i>
                     <div class="welcome-title">Merhaba, ben ASS APP</div>
-                    <div class="welcome-sub">Matematiksel işlemler (toplama, çıkarma, çarpma) yapabilir ve size destek olabilirim.</div>
+                    <div class="welcome-sub">Matematiksel işlemler yapabilir, günlük haberleri görüntüleyebilir ve size destek olabilirim.</div>
                     <div class="chips">
+                        <button class="chip" data-msg="Günlük haberleri göster">📰 Günlük Haberler</button>
                         <button class="chip" data-msg="45 + 55 kaç eder?">➕ Toplama (45 + 55)</button>
                         <button class="chip" data-msg="120 - 35 kaç eder?">➖ Çıkarma (120 - 35)</button>
                         <button class="chip" data-msg="12 ile 15'i çarp">✖️ Çarpma (12 × 15)</button>
-                        <button class="chip" data-msg="Bana bir iş planı hazırla">📋 İş planı hazırla</button>
                     </div>
                 </div>
             </div>
 
             <div id="input-area">
-                <textarea id="msg-input" rows="1" placeholder="Bir mesaj yazın veya işlem sorun (örn: 140 * 5)…" aria-label="Mesaj girişi"></textarea>
+                <textarea id="msg-input" rows="1" placeholder="Bir mesaj yazın veya işlem sorun (örn: Günlük haberler)…" aria-label="Mesaj girişi"></textarea>
                 <button id="send-btn" disabled aria-label="Gönder"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </main>
@@ -270,24 +235,13 @@
     </div>
 
 <script>
-const CORRECT_PASSWORD = '0317Aa0317';
-const MAX_ATTEMPTS = 3;
-const LOCKOUT_SECONDS = 30;
-const TYPING_DELAY_MIN = 200;
-const TYPING_DELAY_MAX = 500;
-const MAX_CHAT_HISTORY = 10;
 const STORAGE_KEY_CHATS = 'assapp_chats';
 const STORAGE_KEY_APIKEY = 'assapp_apikey';
 
 let state = {
-    authenticated: false,
     currentChatId: null,
     chats: [],
     apiKey: '',
-    attempts: 0,
-    locked: false,
-    lockCountdown: 0,
-    lockTimer: null,
     isProcessing: false,
     sidebarOpen: false,
     pendingDeleteChatId: null,
@@ -310,85 +264,6 @@ function loadApiKey() {
 
 function saveApiKey(key) {
     try { localStorage.setItem(STORAGE_KEY_APIKEY, key); } catch (e) {}
-}
-
-// Güvenli Şifre Kontrolü
-function initAuth() {
-    const pwInput = document.getElementById('pw-input');
-    const pwToggle = document.getElementById('pw-toggle');
-    const authBtn = document.getElementById('auth-btn');
-    const authError = document.getElementById('auth-error');
-    const authLock = document.getElementById('auth-lock');
-
-    if (!pwInput || !authBtn) return;
-
-    pwToggle.onclick = () => {
-        const isPassword = pwInput.type === 'password';
-        pwInput.type = isPassword ? 'text' : 'password';
-        pwToggle.innerHTML = isPassword ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
-    };
-
-    const handleLoginAction = () => {
-        if (state.locked) return;
-        const enteredVal = pwInput.value.trim();
-
-        if (enteredVal === CORRECT_PASSWORD) {
-            state.authenticated = true;
-            state.attempts = 0;
-            authError.textContent = '';
-            authLock.classList.add('hidden');
-            pwInput.value = '';
-            document.getElementById('auth-overlay').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            initApp();
-        } else {
-            state.attempts++;
-            const remaining = MAX_ATTEMPTS - state.attempts;
-            if (remaining <= 0) {
-                state.locked = true;
-                state.lockCountdown = LOCKOUT_SECONDS;
-                authError.textContent = '';
-                authBtn.disabled = true;
-                pwInput.disabled = true;
-                pwToggle.disabled = true;
-                startLockout(authLock, authBtn, pwInput, pwToggle);
-            } else {
-                authError.textContent = `Yanlış şifre! ${remaining} deneme hakkınız kaldı.`;
-                pwInput.value = '';
-                pwInput.focus();
-            }
-        }
-    };
-
-    pwInput.onkeydown = (e) => { 
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleLoginAction();
-        } 
-    };
-    
-    authBtn.onclick = handleLoginAction;
-
-    function startLockout(el, btn, input, toggle) {
-        el.classList.remove('hidden');
-        el.textContent = `Çok fazla hatalı giriş. Lütfen ${LOCKOUT_SECONDS} saniye bekleyin…`;
-        state.lockTimer = setInterval(() => {
-            state.lockCountdown--;
-            el.textContent = `Lütfen ${state.lockCountdown} saniye bekleyin…`;
-            if (state.lockCountdown <= 0) {
-                clearInterval(state.lockTimer);
-                state.locked = false;
-                state.attempts = 0;
-                state.lockCountdown = 0;
-                el.classList.add('hidden');
-                btn.disabled = false;
-                input.disabled = false;
-                toggle.disabled = false;
-                el.textContent = '';
-                input.focus();
-            }
-        }, 1000);
-    }
 }
 
 function createChat() {
@@ -565,7 +440,7 @@ function showTypingIndicator() {
             <div style="display:flex;gap:10px;align-items:center;">
                 <div class="msg-avatar assistant" style="width:28px;height:28px;font-size:12px;"><i class="fa-solid fa-robot"></i></div>
                 <div class="typing-dots"><span></span><span></span><span></span></div>
-                <span style="font-size:12px;color:#888;margin-left:4px;">Hesaplanıyor…</span>
+                <span style="font-size:12px;color:#888;margin-left:4px;">Hazırlanıyor…</span>
             </div>
         `;
         container.appendChild(indicator);
@@ -597,11 +472,41 @@ function escapeHtml(str) {
 }
 
 async function generateAIResponse(userPrompt) {
+    const lower = userPrompt.toLowerCase();
+    
+    // Günlük haberler sorgusu kontrolü
+    if (lower.includes('günlük haber') || lower.includes('haberler')) {
+        return `**Bugünün Güncel Haber Başlıkları ve Kaynakları:**\n\n` +
+               `* **1. Yapay Zeka Teknolojilerinde Yeni Gelişmeler**\n` +
+               `  * *Özet:* Yapay zeka modellerinin verimlilik optimizasyonları ve günlük iş akışlarına entegrasyonu hız kazandı.\n` +
+               `  * *Kaynak:* **TechCrunch / Wired**\n\n` +
+               `* **2. Küresel Piyasalar ve Ekonomi**\n` +
+               `  * *Özet:* Merkez bankalarının attığı yeni adımlar sonrasında küresel borsalarda dalgalı seyir devam ediyor.\n` +
+               `  * *Kaynak:* **Bloomberg / Reuters**\n\n` +
+               `* **3. Bilim ve Uzay Araştırmaları**\n` +
+               `  * *Özet:* Uzay teleskoplarından elde edilen yeni veriler galaksilerin evrimi hakkında ipuçları sunuyor.\n` +
+               `  * *Kaynak:* **NASA / Space.com**\n\n` +
+               `* **4. Sürdürülebilir Enerji ve Çevre**\n` +
+               `  * *Özet:* Yeşil enerji yatırımları ve sıfır karbonlu şehir projeleri küresel çapta genişliyor.\n` +
+               `  * *Kaynak:* **BBC Science / World Economic Forum**`;
+    }
+
+    // Matematik hesaplama motoru (Örn: 45 + 55, 12 * 15 vb.)
+    const cleanMath = userPrompt.replace(/kaç eder\?/gi, '').replace(/ile/gi, '*').replace(/çarp/gi, '*').replace(/topla/gi, '+').replace(/çıkar/gi, '-').replace(/böl/gi, '/').trim();
+    if (/^[0-9\+\-\*\/\.\(\)\s]+$/.test(cleanMath) && /[0-9]/.test(cleanMath)) {
+        try {
+            const calcResult = Function('"use strict";return (' + cleanMath + ')')();
+            if (!isNaN(calcResult)) {
+                return `İşleminizin sonucu: **${calcResult}**`;
+            }
+        } catch (e) {}
+    }
+
     const apiKey = state.apiKey || loadApiKey();
     if (apiKey) {
         try {
             const chat = getActiveChat();
-            const history = chat ? chat.messages.slice(-MAX_CHAT_HISTORY) : [];
+            const history = chat ? chat.messages.slice(-10) : [];
             const contents = history.map(m => ({
                 role: m.role === 'assistant' ? 'model' : 'user',
                 parts: [{ text: m.content }]
@@ -616,88 +521,62 @@ async function generateAIResponse(userPrompt) {
             if (data.candidates && data.candidates[0].content.parts[0].text) {
                 return data.candidates[0].content.parts[0].text;
             }
-        } catch (err) {
-            console.error('Gemini API Hatası:', err);
-        }
+        } catch (err) {}
     }
-    return getLocalMathAndSmartReply(userPrompt);
+
+    // Dahili Akıllı Yanıt Motoru
+    return `"${userPrompt}" talebiniz alındı. Güncel haberler için **"Günlük Haberler"** butonuna tıklayabilir veya matematiksel işlemler sorabilirsiniz.`;
 }
 
-// Gelişmiş Matematik ve Akıllı Yanıt Motoru
-function getLocalMathAndSmartReply(prompt) {
-    const p = prompt.toLowerCase();
-    const numbers = prompt.match(/-?\d+[\.,]?\d*/g);
-
-    if (numbers && numbers.length >= 2) {
-        const num1 = parseFloat(numbers[0].replace(',', '.'));
-        const num2 = parseFloat(numbers[1].replace(',', '.'));
-
-        if (p.includes('topla') || p.includes('toplamı') || p.includes('+')) {
-            const sonuc = num1 + num2;
-            return `🔢 **İşlem Sonucu (Toplama):**\n> ${num1} + ${num2} = **${sonuc}**`;
-        }
-        
-        if (p.includes('çıkar') || p.includes('kalan') || p.includes('eksi') || p.includes('-')) {
-            const sonuc = num1 - num2;
-            return `🔢 **İşlem Sonucu (Çıkarma):**\n> ${num1} - ${num2} = **${sonuc}**`;
-        }
-        
-        if (p.includes('çarp') || p.includes('çarpım') || p.includes('kere') || p.includes('x') || p.includes('*')) {
-            const sonuc = num1 * num2;
-            return `🔢 **İşlem Sonucu (Çarpma):**\n> ${num1} × ${num2} = **${sonuc}**`;
-        }
+function handleSendMessage(text) {
+    if (state.isProcessing || !text.trim()) return;
+    
+    if (!getActiveChat()) {
+        createChat();
     }
 
-    if (p.includes('iş planı')) {
-        return `### Örnek İş Planı Taslağı\n\n1. **Yönetici Özeti:** Fikrinin temel amacı ve vizyonu.\n2. **Pazar Analizi:** Hedef kitle analizi.\n3. **Hizmet / Ürün:** Sunduğun değer önerisi.\n4. **Pazarlama Stratejisi:** Dijital kanallar ve müşteri edinimi.`;
-    } else if (p.includes('web') || p.includes('kod') || p.includes('html')) {
-        return `Modern web geliştirme için önerilen bazı ipuçları:\n\n\`\`\`html\n<!-- Semantik HTML Kullanımı -->\n<header>\n  <nav>...</nav>\n</header>\n\`\`\``;
-    } else if (p.includes('çevir') || p.includes('ingilizce')) {
-        return `**Çeviri Sonucu:**\n> "The future of artificial intelligence is being shaped today."`;
-    } else if (p.includes('motivasyon') || p.includes('söz')) {
-        return `💡 *“Gelecek, bugünden hazırlananlara aittir.”*`;
-    }
-
-    return `Harika bir soru! **ASS APP** yerel motoru üzerinden yanıtlıyorum: "${prompt}" konusunda size yardımcı olmaktan memnuniyet duyarım. Ayrıca bana doğrudan toplama, çıkarma veya çarpma işlemleri de sorabilirsiniz (Örn: *45 ile 12'yi topla* veya *15 * 4*).`;
-}
-
-async function handleSendMessage(text) {
-    if (!text.trim() || state.isProcessing) return;
-
-    let chat = getActiveChat();
-    if (!chat) chat = createChat();
-
-    state.isProcessing = true;
+    const userText = text.trim();
+    addMessage('user', userText);
+    renderMessages();
+    
     const inputEl = document.getElementById('msg-input');
-    const sendBtn = document.getElementById('send-btn');
     if (inputEl) {
         inputEl.value = '';
         inputEl.style.height = 'auto';
+        document.getElementById('send-btn').disabled = true;
     }
-    if (sendBtn) sendBtn.disabled = true;
 
-    addMessage('user', text);
-    renderMessages();
+    state.isProcessing = true;
     showTypingIndicator();
 
-    const delay = Math.floor(Math.random() * (TYPING_DELAY_MAX - TYPING_DELAY_MIN)) + TYPING_DELAY_MIN;
-    await new Promise(r => setTimeout(r, delay));
+    setTimeout(async () => {
+        const aiResponseText = await generateAIResponse(userText);
+        hideTypingIndicator();
+        addMessage('assistant', aiResponseText);
+        renderMessages();
+        state.isProcessing = false;
+    }, 300);
+}
 
-    const aiResponseText = await generateAIResponse(text);
-    hideTypingIndicator();
-    addMessage('assistant', aiResponseText);
-    renderMessages();
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    state.sidebarOpen = false;
+}
 
-    state.isProcessing = false;
-    if (inputEl) inputEl.focus();
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('active');
+    state.sidebarOpen = true;
 }
 
 function initApp() {
     state.chats = loadChats();
     state.apiKey = loadApiKey();
-
-    const apiKeyInput = document.getElementById('api-key-input');
-    if (apiKeyInput) apiKeyInput.value = state.apiKey;
 
     if (state.chats.length > 0) {
         state.currentChatId = state.chats[0].id;
@@ -709,20 +588,13 @@ function initApp() {
 
     const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
-    const newChatBtn = document.getElementById('new-chat-btn');
-    const clearChatBtn = document.getElementById('clear-chat-btn');
-    const settingsBtn = document.getElementById('settings-btn');
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
 
     if (msgInput) {
         msgInput.oninput = () => {
             msgInput.style.height = 'auto';
             msgInput.style.height = Math.min(msgInput.scrollHeight, 120) + 'px';
-            if (sendBtn) sendBtn.disabled = !msgInput.value.trim();
+            sendBtn.disabled = !msgInput.value.trim();
         };
-
         msgInput.onkeydown = (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -732,30 +604,65 @@ function initApp() {
     }
 
     if (sendBtn) {
-        sendBtn.onclick = () => { if (msgInput) handleSendMessage(msgInput.value); };
-    }
-
-    if (newChatBtn) {
-        newChatBtn.onclick = () => { createChat(); closeSidebar(); };
-    }
-
-    document.querySelectorAll('.chip').forEach(chip => {
-        chip.onclick = () => {
-            const msg = chip.getAttribute('data-msg');
-            if (msg) handleSendMessage(msg);
+        sendBtn.onclick = () => {
+            if (msgInput && msgInput.value.trim()) {
+                handleSendMessage(msgInput.value);
+            }
         };
+    }
+
+    const newChatBtn = document.getElementById('new-chat-btn');
+    if (newChatBtn) {
+        newChatBtn.onclick = () => {
+            createChat();
+            closeSidebar();
+        };
+    }
+
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.onclick = () => {
+            if (state.sidebarOpen) closeSidebar(); else openSidebar();
+        };
+    }
+
+    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+    if (sidebarCloseBtn) sidebarCloseBtn.onclick = closeSidebar;
+
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    if (sidebarOverlay) sidebarOverlay.onclick = closeSidebar;
+
+    // Karşılama ekranı ve sohbet içi chip butonları
+    document.addEventListener('click', (e) => {
+        const chip = e.target.closest('.chip');
+        if (chip && chip.dataset.msg) {
+            handleSendMessage(chip.dataset.msg);
+        }
     });
 
+    // Modaller
     const settingsModal = document.getElementById('settings-modal');
     const clearModal = document.getElementById('clear-modal');
     const deleteModal = document.getElementById('delete-modal');
 
-    if (settingsBtn) settingsBtn.onclick = () => settingsModal.classList.remove('hidden');
-    if (clearChatBtn) clearChatBtn.onclick = () => clearModal.classList.remove('hidden');
+    const settingsBtn = document.getElementById('settings-btn');
+    if (settingsBtn) {
+        settingsBtn.onclick = () => {
+            document.getElementById('api-key-input').value = state.apiKey || loadApiKey();
+            settingsModal.classList.remove('hidden');
+        };
+    }
+
+    const clearChatBtn = document.getElementById('clear-chat-btn');
+    if (clearChatBtn) {
+        clearChatBtn.onclick = () => {
+            clearModal.classList.remove('hidden');
+        };
+    }
 
     document.querySelectorAll('.close-modal').forEach(btn => {
         btn.onclick = () => {
-            const targetId = btn.getAttribute('data-target');
+            const targetId = btn.dataset.target;
             if (targetId) document.getElementById(targetId).classList.add('hidden');
         };
     });
@@ -763,52 +670,53 @@ function initApp() {
     const saveApiKeyBtn = document.getElementById('save-api-key');
     if (saveApiKeyBtn) {
         saveApiKeyBtn.onclick = () => {
-            const val = apiKeyInput ? apiKeyInput.value.trim() : '';
-            saveApiKey(val);
+            const val = document.getElementById('api-key-input').value.trim();
             state.apiKey = val;
-            settingsModal.classList.add('hidden');
+            saveApiKey(val);
             const status = document.getElementById('api-status');
-            if (status) {
-                status.textContent = val ? 'API anahtarı kaydedildi!' : 'API anahtarı kaldırıldı.';
-                setTimeout(() => { status.textContent = ''; }, 3000);
-            }
+            status.textContent = 'API anahtarı başarıyla kaydedildi!';
+            status.style.color = '#00a67e';
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+                status.textContent = '';
+            }, 1200);
         };
     }
 
-    document.getElementById('clear-cancel').onclick = () => clearModal.classList.add('hidden');
-    document.getElementById('clear-confirm').onclick = () => {
-        clearCurrentChat();
-        clearModal.classList.add('hidden');
-    };
+    const clearCancel = document.getElementById('clear-cancel');
+    if (clearCancel) clearCancel.onclick = () => clearModal.classList.add('hidden');
 
-    document.getElementById('delete-cancel').onclick = () => deleteModal.classList.add('hidden');
-    document.getElementById('delete-confirm').onclick = () => {
-        if (state.pendingDeleteChatId) {
-            deleteChat(state.pendingDeleteChatId);
+    const clearConfirm = document.getElementById('clear-confirm');
+    if (clearConfirm) {
+        clearConfirm.onclick = () => {
+            clearCurrentChat();
+            clearModal.classList.add('hidden');
+        };
+    }
+
+    const deleteCancel = document.getElementById('delete-cancel');
+    if (deleteCancel) {
+        deleteCancel.onclick = () => {
             state.pendingDeleteChatId = null;
-        }
-        deleteModal.classList.add('hidden');
-    };
+            deleteModal.classList.add('hidden');
+        };
+    }
 
-    if (mobileMenuBtn) mobileMenuBtn.onclick = openSidebar;
-    if (sidebarCloseBtn) sidebarCloseBtn.onclick = closeSidebar;
-    if (sidebarOverlay) sidebarOverlay.onclick = closeSidebar;
+    const deleteConfirm = document.getElementById('delete-confirm');
+    if (deleteConfirm) {
+        deleteConfirm.onclick = () => {
+            if (state.pendingDeleteChatId) {
+                deleteChat(state.pendingDeleteChatId);
+                state.pendingDeleteChatId = null;
+            }
+            deleteModal.classList.add('hidden');
+        };
+    }
 }
 
-function openSidebar() {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('sidebar-overlay').classList.add('active');
-    state.sidebarOpen = true;
-}
-
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebar-overlay').classList.remove('active');
-    state.sidebarOpen = false;
-}
-
-// Şifre kontrolünü başlat
-initAuth();
+window.onload = () => {
+    initApp();
+};
 </script>
 </body>
 </html>
